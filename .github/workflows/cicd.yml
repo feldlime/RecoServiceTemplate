@@ -1,0 +1,48 @@
+name: CICD
+on: [push]
+
+env:
+  IMAGE: reports_service
+  SERVICE: reports
+
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Setup python"
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - run: make setup
+      - run: make lint
+      - run: make test
+
+
+  deploy:
+    needs: run_tests
+    runs-on: ubuntu-20.04
+    # if: github.ref == 'refs/heads/master'
+
+    steps:
+
+      - name: Install heroku-cli
+        run: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+
+      - name: Check Out Repo
+        uses: actions/checkout@v2
+
+      - name: Login to Heroku Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: registry.heroku.com
+          username: _
+          password: ${{ secrets.HEROKU_TOKEN }}
+
+      - name: Build and push container
+        run: heroku container:push web --app ${{ secrets.HEROKU_APP }}
+
+      - name: Release app
+        run: heroku container:release web --app ${{ secrets.HEROKU_APP }}
