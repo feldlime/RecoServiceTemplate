@@ -26,6 +26,8 @@ jobs:
     needs: test
     runs-on: ubuntu-20.04
     # if: github.ref == 'refs/heads/master'
+    env:
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
     steps:
 
@@ -40,7 +42,7 @@ jobs:
         with:
           registry: registry.heroku.com
           username: _
-          password: ${{ secrets.HEROKU_TOKEN }}
+          password: ${{ secrets.HEROKU_API_KEY }}
 
       - name: Build and push container
         run: heroku container:push web --app ${{ secrets.HEROKU_APP }}

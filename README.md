@@ -133,7 +133,7 @@ make run
 3. Создать приложение
 4. Залогиниться: `heroku login`
 5. Получить долгоживущий токен: `heroku authorizations:create`
-6. Добавить токен в переменную `HEROKU_TOKEN` в `Github` (в настройках репозитория)
+6. Добавить токен в переменную `HEROKU_API_KEY` в `Github` (в настройках репозитория)
 7. Выделить себе бесплатные web dynos: `heroku ps:scale web=1 --app <HEROKU-APP-NAME>`
 8. Указать имя приложения в хероку в переменную `HEROKU_APP` в `Github`.
 
