@@ -11,6 +11,8 @@ export PATH := $(BIN):$(PATH)
 PROJECT := service
 TESTS := tests
 
+IMAGE_NAME := reco_service
+CONTAINER_NAME := reco_service
 
 # Prepare
 
@@ -62,8 +64,16 @@ lint: isort flake mypy pylint
 test: .venv .pytest
 
 
+# Docker
+
+build:
+	docker build . -t $(IMAGE_NAME)
+
+run: build
+	docker run -p 8080:8080 --name $(CONTAINER_NAME) $(IMAGE_NAME)
+
 # All
 
-all: setup format lint test
+all: setup format lint test run
 
 .DEFAULT_GOAL = all
