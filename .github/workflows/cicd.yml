@@ -22,7 +22,7 @@ jobs:
 
 
   deploy:
-    needs: run_tests
+    needs: test
     runs-on: ubuntu-20.04
     # if: github.ref == 'refs/heads/master'
 
