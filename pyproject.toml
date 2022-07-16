@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "reco_service"
+version = "0.0.1"
+description = ""
+authors = ["Emiliy Feldman <feldlime@yandex.ru>"]
+maintainers = ["Emiliy Feldman <feldlime@yandex.ru>"]
+readme = "README.md"
+packages = [
+    { include = "service" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.65.1"
+pydantic = "^1.8.2"
+gunicorn = "^20.1.0"
+uvloop = "^0.15.2"
+uvicorn = "^0.14.0"
+orjson = "^3.7.7"
+starlette = "^0.14.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+requests = "2.25.1"
+mypy = "^0.812"
+isort = "^5.8.0"
+bandit = "^1.7.0"
+flake8 = "^3.9.2"
+pylint = "~2.8.3"
+
+[build-system]
+requires = ["poetry>=1.0.5"]
+build-backend = "poetry.masonry.api"
