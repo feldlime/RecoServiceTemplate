@@ -33,9 +33,9 @@ async def ping() -> JSONResponse:
 @router.get(
     path="/reco/{model_name}/{user_id}",
     tags=["Health"],
-    response_model=RecoResponse,
+    response_model=ManyRecoResponse,
 )
-async def get_reco(model_name: str, user_id: str, n: int = Query(10_000)) -> RecoResponse:
+async def get_reco(model_name: str, user_id: str, n: int = Query(10_000)) -> ManyRecoResponse:
     # Write your code
     app_logger.info(f"Request for user_id: {user_id}")
 
