@@ -2,15 +2,21 @@ from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, FastAPI
+from fastapi.param_functions import Query
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
+from service.log import app_logger
 from service.response import create_response
 
 
 class RecoResponse(BaseModel):
     user_id: int
     items: List[int]
+
+
+class ManyRecoResponse(BaseModel):
+    data: List[RecoResponse]
 
 
 router = APIRouter()
@@ -29,8 +35,9 @@ async def ping() -> JSONResponse:
     tags=["Health"],
     response_model=RecoResponse,
 )
-async def get_reco(model_name: str, user_id: str) -> RecoResponse:
-    # Write your code here
+async def get_reco(model_name: str, user_id: str, n: int = Query(10_000)) -> RecoResponse:
+    # Write your code
+    app_logger.info(f"Request for user_id: {user_id}")
 
     if model_name == "model_1":
         reco = list(range(10))
@@ -39,7 +46,8 @@ async def get_reco(model_name: str, user_id: str) -> RecoResponse:
     else:
         raise ValueError
 
-    return RecoResponse(user_id=user_id, items=reco)
+    responses = [RecoResponse(user_id=user_id, items=reco)] * n
+    return ManyRecoResponse(data=responses)
 
 
 def add_views(app: FastAPI) -> None:
