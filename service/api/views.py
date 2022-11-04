@@ -5,12 +5,12 @@ from fastapi import APIRouter, FastAPI
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
-from service.api.exceptions import UserNotFoundException
 from service.response import create_response
 
 
 class RecoResponse(BaseModel):
-    items: List[str]
+    user_id: int
+    items: List[int]
 
 
 router = APIRouter()
@@ -25,19 +25,21 @@ async def ping() -> JSONResponse:
 
 
 @router.get(
-    path="/reco/{user_id}",
+    path="/reco/{model_name}/{user_id}",
     tags=["Health"],
     response_model=RecoResponse,
 )
-async def get_reco(user_id: str) -> RecoResponse:
+async def get_reco(model_name: str, user_id: str) -> RecoResponse:
     # Write your code here
 
-    if len(user_id) > 3:  # stub check
-        raise UserNotFoundException(error_message=f"User {user_id} not found")
+    if model_name == "model_1":
+        reco = list(range(10))
+    elif model_name == "model_2":
+        reco = [9906, 14534,  5874, 11574, 14, 7098, 9242, 15422,  2582, 5701]
+    else:
+        raise ValueError
 
-    reco = [user_id + "a", user_id + "b"]  # stub reco
-
-    return RecoResponse(items=reco)
+    return RecoResponse(user_id=user_id, items=reco)
 
 
 def add_views(app: FastAPI) -> None:
