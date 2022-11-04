@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, FastAPI
 from fastapi.param_functions import Query
@@ -33,9 +33,28 @@ async def ping() -> JSONResponse:
 @router.get(
     path="/reco/{model_name}/{user_id}",
     tags=["Health"],
+    response_model=RecoResponse,
+)
+async def get_reco(model_name: str, user_id: str) -> RecoResponse:
+    # Write your code
+    app_logger.info(f"Request for user_id: {user_id}")
+
+    if model_name == "model_1":
+        reco = list(range(10))
+    elif model_name == "model_2":
+        reco = [9906, 14534,  5874, 11574, 14, 7098, 9242, 15422,  2582, 5701]
+    else:
+        raise ValueError
+
+    return RecoResponse(user_id=user_id, items=reco)
+
+
+@router.get(
+    path="/reco_batch/{model_name}/{user_id}",
+    tags=["Health"],
     response_model=ManyRecoResponse,
 )
-async def get_reco(model_name: str, user_id: str, n: int = Query(10_000)) -> ManyRecoResponse:
+async def get_reco_batch(model_name: str, user_id: str, n: int = Query(1000)) -> ManyRecoResponse:
     # Write your code
     app_logger.info(f"Request for user_id: {user_id}")
 
