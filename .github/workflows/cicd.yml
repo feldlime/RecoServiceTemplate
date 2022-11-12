@@ -1,10 +1,6 @@
 name: CICD
 on: [push]
 
-env:
-  IMAGE: reports_service
-  SERVICE: reports
-
 
 jobs:
   test:
@@ -20,32 +16,3 @@ jobs:
       - run: make setup
       - run: make lint
       - run: make test
-
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-20.04
-    # if: github.ref == 'refs/heads/master'
-    env:
-      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-
-    steps:
-
-      - name: Install heroku-cli
-        run: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-
-      - name: Check Out Repo
-        uses: actions/checkout@v2
-
-      - name: Login to Heroku Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: registry.heroku.com
-          username: _
-          password: ${{ secrets.HEROKU_API_KEY }}
-
-      - name: Build and push container
-        run: heroku container:push web --app ${{ secrets.HEROKU_APP }}
-
-      - name: Release app
-        run: heroku container:release web --app ${{ secrets.HEROKU_APP }}
