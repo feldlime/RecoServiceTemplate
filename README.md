@@ -90,7 +90,7 @@ python main.py
 Хост и порт по умолчанию: `127.0.0.1` и `8080`.
 Их можно изменить через переменные окружения `HOST` и `PORT`.
 
-Управляет процессом легковесный веб-сервер [uvicorn](https://www.uvicorn.org/).
+Управляет процессом легковесный [ASGI](https://asgi.readthedocs.io/en/latest/) server [uvicorn](https://www.uvicorn.org/).
 
 Обратите внимание: для запуска нужно использовать `python` из окружения проекта.
 
