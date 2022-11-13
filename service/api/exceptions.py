@@ -17,7 +17,7 @@ class AppException(Exception):
         super().__init__()
 
 
-class UserNotFoundException(AppException):
+class UserNotFoundError(AppException):
     def __init__(
         self,
         status_code: int = HTTPStatus.NOT_FOUND,
