@@ -22,7 +22,7 @@ class LogConfig(Config):
 
 class ServiceConfig(Config):
     service_name: str = "reco_service"
-    request_id_header: str = "X-Request-Id"
+    k_recs: int = 10
 
     log_config: LogConfig
 

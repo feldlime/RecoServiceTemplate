@@ -34,8 +34,10 @@ def create_app(config: ServiceConfig) -> FastAPI:
     setup_asyncio(thread_name_prefix=config.service_name)
 
     app = FastAPI(debug=False)
+    app.state.k_recs = config.k_recs
+
     add_views(app)
-    add_middlewares(app, config.request_id_header)
+    add_middlewares(app)
     add_exception_handlers(app)
 
     return app

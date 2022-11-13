@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from typing import List
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
@@ -27,12 +27,17 @@ async def ping() -> JSONResponse:
 
 @router.get(
     path="/reco/{model_name}/{user_id}",
-    tags=["Health"],
+    tags=["Recommendations"],
     response_model=RecoResponse,
 )
-async def get_reco(model_name: str, user_id: str) -> RecoResponse:
+async def get_reco(
+    request: Request,
+    model_name: str,
+    user_id: str,
+) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
-    reco = list(range(10))
+    k_recs = request.app.state.k_recs
+    reco = list(range(k_recs))
     return RecoResponse(user_id=user_id, items=reco)
 
 
