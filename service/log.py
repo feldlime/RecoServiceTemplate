@@ -1,7 +1,6 @@
 import logging.config
 import typing as tp
 
-from .context import REQUEST_ID
 from .settings import ServiceConfig
 
 app_logger = logging.getLogger("app")
@@ -18,18 +17,6 @@ class ServiceNameFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         setattr(record, "service_name", self.service_name)
 
-        return super().filter(record)
-
-
-class RequestIDFilter(logging.Filter):
-    def __init__(self, name: str = "") -> None:
-        self.context_var = REQUEST_ID
-
-        super().__init__(name)
-
-    def filter(self, record: logging.LogRecord) -> bool:
-        request_id = self.context_var.get("-")
-        setattr(record, "request_id", request_id)
         return super().filter(record)
 
 
@@ -90,19 +77,19 @@ def get_config(service_config: ServiceConfig) -> tp.Dict[str, tp.Any]:
                 "formatter": "console",
                 "class": "logging.StreamHandler",
                 "stream": "ext://sys.stdout",
-                "filters": ["service_name", "request_id"],
+                "filters": ["service_name"],
             },
             "access": {
                 "formatter": "access",
                 "class": "logging.StreamHandler",
                 "stream": "ext://sys.stdout",
-                "filters": ["service_name", "request_id"],
+                "filters": ["service_name"],
             },
             "gunicorn.access": {
                 "class": "logging.StreamHandler",
                 "formatter": "gunicorn.access",
                 "stream": "ext://sys.stdout",
-                "filters": ["service_name", "request_id"],
+                "filters": ["service_name"],
             },
         },
         "formatters": {
@@ -113,7 +100,6 @@ def get_config(service_config: ServiceConfig) -> tp.Dict[str, tp.Any]:
                     'service_name="%(service_name)s" '
                     'logger="%(name)s" '
                     'pid="%(process)d" '
-                    'request_id="%(request_id)s" '
                     'message="%(message)s" '
                 ),
                 "datefmt": datetime_format,
@@ -125,7 +111,6 @@ def get_config(service_config: ServiceConfig) -> tp.Dict[str, tp.Any]:
                     'service_name="%(service_name)s" '
                     'logger="%(name)s" '
                     'pid="%(process)d" '
-                    'request_id="%(request_id)s" '
                     'method="%(method)s" '
                     'requested_url="%(requested_url)s" '
                     'status_code="%(status_code)s" '
@@ -139,7 +124,6 @@ def get_config(service_config: ServiceConfig) -> tp.Dict[str, tp.Any]:
                     'level="%(levelname)s" '
                     'logger="%(name)s" '
                     'pid="%(process)d" '
-                    'request_id="%(request_id)s" '
                     '"%(message)s"'
                 ),
                 "datefmt": datetime_format,
@@ -150,7 +134,6 @@ def get_config(service_config: ServiceConfig) -> tp.Dict[str, tp.Any]:
                 "()": "service.log.ServiceNameFilter",
                 "service_name": service_config.service_name,
             },
-            "request_id": {"()": "service.log.RequestIDFilter"},
         },
     }
 

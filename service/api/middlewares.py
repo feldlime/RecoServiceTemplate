@@ -7,9 +7,7 @@ from starlette.middleware.base import (
 )
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
-from starlette.types import ASGIApp
 
-from service.context import REQUEST_ID
 from service.log import access_logger, app_logger
 from service.models import Error
 from service.response import server_error
@@ -40,26 +38,6 @@ class AccessMiddleware(BaseHTTPMiddleware):
         return response
 
 
-class RequestIdMiddleware(BaseHTTPMiddleware):
-
-    def __init__(self, app: ASGIApp, request_id_header: str):
-        self.request_id_header = request_id_header
-        super().__init__(app)
-
-    async def dispatch(
-        self,
-        request: Request,
-        call_next: RequestResponseEndpoint,
-    ) -> Response:
-        request_id = request.headers.get(self.request_id_header, "-")
-        token = REQUEST_ID.set(request_id)
-        response = await call_next(request)
-        if request_id != "-":
-            response.headers[self.request_id_header] = request_id
-        REQUEST_ID.reset(token)
-        return response
-
-
 class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(
@@ -80,7 +58,7 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
             return server_error([error])
 
 
-def add_middlewares(app: FastAPI, request_id_header: str) -> None:
+def add_middlewares(app: FastAPI) -> None:
     # do not change order
     app.add_middleware(ExceptionHandlerMiddleware)
     app.add_middleware(AccessMiddleware)
