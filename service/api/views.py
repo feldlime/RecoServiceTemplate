@@ -1,12 +1,9 @@
-from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
-from starlette.responses import JSONResponse
 
 from service.log import app_logger
-from service.response import create_response
 
 
 class RecoResponse(BaseModel):
@@ -21,8 +18,8 @@ router = APIRouter()
     path="/health",
     tags=["Health"],
 )
-async def ping() -> JSONResponse:
-    return create_response(message="I am alive :)", status_code=HTTPStatus.OK)
+async def health() -> str:
+    return "I am alive"
 
 
 @router.get(
