@@ -1,4 +1,5 @@
 import os
+
 import uvicorn
 
 from service.api.app import create_app
