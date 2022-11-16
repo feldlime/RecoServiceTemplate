@@ -25,6 +25,7 @@ uvicorn = "^0.14.0"
 orjson = "^3.7.7"
 starlette = "^0.14.2"
 pre-commit = "^2.20.0"
+numpy = "^1.23.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

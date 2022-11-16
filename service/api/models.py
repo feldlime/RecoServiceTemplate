@@ -1,0 +1,3 @@
+MODELS = [
+    'random'
+]
