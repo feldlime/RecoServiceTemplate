@@ -65,7 +65,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
-# configs
-.gitconfig
-.git-credentials
