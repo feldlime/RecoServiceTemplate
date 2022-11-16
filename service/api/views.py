@@ -30,6 +30,10 @@ api_key_header = APIKeyHeader(name='API_KEY', auto_error=False)
 token_bearer = HTTPBearer(auto_error=False)
 
 API_KEY = os.getenv("API_KEY")
+if API_KEY is None:
+    raise Exception(
+        "API_KEY is not set. "
+        "You can set it in .env file or in the environment variables.")
 
 
 async def get_api_key(
