@@ -2,7 +2,6 @@ from pydantic import BaseSettings
 
 
 class Config(BaseSettings):
-
     class Config:
         case_sensitive = False
 
@@ -14,9 +13,7 @@ class LogConfig(Config):
     class Config:
         case_sensitive = False
         fields = {
-            "level": {
-                "env": ["log_level"]
-            },
+            "level": {"env": ["log_level"]},
         }
 
 

@@ -1,3 +1,1 @@
-MODELS = [
-    'random'
-]
+MODELS = ["random"]

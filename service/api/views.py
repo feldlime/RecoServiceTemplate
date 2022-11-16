@@ -1,22 +1,24 @@
 from typing import List, Optional, Sequence
 
+import numpy as np
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
-import numpy as np
 
-from service.api.exceptions import UserNotFoundError, ModelNotFoundError, AppException
-from service.log import app_logger
+from service.api.exceptions import ModelNotFoundError, UserNotFoundError
 from service.api.models import MODELS
+from service.log import app_logger
 
 
 class RecoResponse(BaseModel):
     user_id: int
     items: List[int]
 
+
 class NotFoundError(BaseModel):
     error_key: str
-    error_message: str 
+    error_message: str
     error_loc: Optional[Sequence[str]]
+
 
 router = APIRouter()
 
@@ -33,7 +35,7 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
-    responses={404: {'model': NotFoundError}, 200: {'model': RecoResponse}}
+    responses={404: {"model": NotFoundError}, 200: {"model": RecoResponse}},
 )
 async def get_reco(
     request: Request,
@@ -52,10 +54,10 @@ async def get_reco(
 
     k_recs = request.app.state.k_recs
 
-    if model_name == 'random':
+    if model_name == "random":
         # Just a random generation of recomendations
         np.random.seed(user_id)
-        reco = np.random.randint(10, 1000, size = k_recs).tolist()
+        reco = np.random.randint(10, 1000, size=k_recs).tolist()
 
     return RecoResponse(user_id=user_id, items=reco)
 
