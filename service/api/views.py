@@ -1,8 +1,9 @@
-from typing import List, Optional, Sequence
-
-from fastapi import APIRouter, FastAPI, Request, HTTPException, status, Depends
-from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordBearer
+from fastapi import APIRouter, FastAPI, Request, HTTPException, status, Depends
+
+from pydantic import BaseModel
+
+from typing import List, Optional, Sequence
 
 from service.api.exceptions import UserNotFoundError, ModelNotFoundError
 from service.log import app_logger
