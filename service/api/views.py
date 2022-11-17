@@ -1,12 +1,15 @@
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request, Depends
-from fastapi.security.http import HTTPAuthorizationCredentials
+from fastapi import APIRouter, Depends, FastAPI, Request
 from fastapi.security import HTTPBearer
+from fastapi.security.http import HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError, ModelNotFoundError, \
-    BearerAccessTokenError
+from service.api.exceptions import (
+    BearerAccessTokenError,
+    ModelNotFoundError,
+    UserNotFoundError,
+)
 from service.log import app_logger
 
 
