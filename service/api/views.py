@@ -55,6 +55,7 @@ async def get_api_key(
     tags=["Health"],
 )
 async def health() -> str:
+    ''' Health check '''
     return "I am alive"
 
 
@@ -71,6 +72,7 @@ async def get_reco(
     user_id: int,
     api_key: APIKey = Depends(get_api_key)
 ) -> RecoResponse:
+    ''' Get recommendations for a user '''
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     if user_id > 10**9:
