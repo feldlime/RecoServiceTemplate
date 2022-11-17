@@ -40,7 +40,7 @@ async def get_api_key(
     api_key_from_query: str = Security(api_key_query),
     api_key_from_header: str = Security(api_key_header),
     token: HTTPAuthorizationCredentials = Security(token_bearer),
-):
+) -> str:
     if api_key_from_query == API_KEY:
         return api_key_from_query
     if api_key_from_header == API_KEY:
