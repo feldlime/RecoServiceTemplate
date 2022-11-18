@@ -8,5 +8,5 @@ services:
     ports:
       - 5050:5050
     environment:
-      HOST: ${HOST}
-      PORT: ${PORT}
+      HOST: 0.0.0.0
+      PORT: 5050
