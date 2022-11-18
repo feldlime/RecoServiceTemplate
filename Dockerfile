@@ -26,4 +26,4 @@ COPY --from=build main.py gunicorn.config.py ./
 RUN pip install -U --no-cache-dir pip dist/*.whl && \
     rm -rf dist
 
-CMD ["gunicorn", "main:app", "-c", "gunicorn.config.py"]
+#CMD ["gunicorn", "main:app", "-c", "gunicorn.config.py"]

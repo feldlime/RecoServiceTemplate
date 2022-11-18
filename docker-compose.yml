@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+    command: gunicorn main:app -c gunicorn.config.py
+    ports:
+      - 5050:5050
+    environment:
+      HOST: ${HOST}
+      PORT: ${PORT}
