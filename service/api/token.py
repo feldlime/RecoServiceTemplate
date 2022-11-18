@@ -16,6 +16,5 @@ async def has_access(credentials: HTTPAuthorizationCredentials = Depends(securit
     token = credentials.credentials
     try:
         payload = jwt.decode(token, key=SECRET_KEY, algorithms="HS256")
-        print("payload => ", payload)
     except JOSEError as e:
         raise NonAuthorizedError()
