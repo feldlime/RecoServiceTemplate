@@ -22,7 +22,7 @@ class RandomModel(RecModel):
 
     def get_answer(self, *args, **kwargs) -> List[int]:
         random.seed(kwargs['user_id'])
-        return [random.randint(0, 256) for _ in range(kwargs['k_recs'])]
+        return random.sample(range(0, 256), kwargs['k_recs'])
 
 
 all_models: Dict[str, Type[RecModel]] = {
