@@ -1,11 +1,14 @@
 from typing import Any, Dict, List, Optional, Sequence
 
-from fastapi import APIRouter, FastAPI, Request, Path
+from fastapi import APIRouter, Depends, FastAPI, Request, Path, Header
 from pydantic import BaseModel
 
 from service.api.exceptions import ModelNotFoundError, UserNotFoundError
+from service.api.token import has_access
 from service.log import app_logger
 from service.api.RecModels import all_models
+
+PROTECTED = [Depends(has_access)]
 
 
 class RecoResponse(BaseModel):
@@ -29,7 +32,8 @@ router = APIRouter()
 @router.get(
     path="/health",
     tags=["Health"],
-    response_model=str
+    response_model=str,
+    responses={401: {'model': ErrorResponse}}
 )
 async def health() -> str:
     return "I am alive"
@@ -39,14 +43,17 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
-    responses={404: {'model': ErrorResponse}}
+    responses={404: {'model': ErrorResponse},
+               401: {'model': ErrorResponse}}
 )
 async def get_reco(
         request: Request,
+        authorization: str = Header(..., description='The bearer token'),
         model_name: str = Path(..., description='The name of testing model'),
         user_id: int = Path(..., description='The specific id of user'),
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
+    print(authorization)
 
     if model_name not in all_models:
         raise ModelNotFoundError(error_message=f'There is no model with name {model_name}')
@@ -63,4 +70,5 @@ async def get_reco(
 
 
 def add_views(app: FastAPI) -> None:
-    app.include_router(router)
+    app.include_router(router,
+                       dependencies=PROTECTED)

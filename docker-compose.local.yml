@@ -8,5 +8,6 @@ services:
     environment:
       PORT: 8080
       RELOAD: 1
+      SECRET_KEY: ${SECRET_KEY}
     volumes:
       - ./:/app
