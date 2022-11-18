@@ -11,6 +11,7 @@ from service.api.exceptions import (
     UserNotFoundError,
 )
 from service.log import app_logger
+from service.models import Error, ErrorResponse
 
 
 class RecoResponse(BaseModel):
@@ -31,16 +32,91 @@ async def health() -> str:
     return "I am alive"
 
 
+# Null values are ignored by OpenAPI.
+# Problem: https://github.com/tiangolo/fastapi/issues/5559
+responses = {
+    401: {
+        "model": ErrorResponse,
+        "description": "Error: Unauthorized",
+        "content": {
+            "application/json": {
+                "example": ErrorResponse(
+                    errors=[
+                        Error(
+                            error_key="incorrect_bearer_key",
+                            error_message="Authorization failure due to incorrect token",
+                            error_loc=None,
+                        )
+                    ]
+                )
+            }
+        },
+    },
+    403: {
+        "model": ErrorResponse,
+        "description": "Error: Forbidden",
+        "content": {
+            "application/json": {
+                "example": ErrorResponse(
+                    errors=[
+                        Error(
+                            error_key="http_exception",
+                            error_message="Not authenticated",
+                            error_loc=None,
+                        )
+                    ]
+                )
+            }
+        },
+    },
+    404: {
+        "model": ErrorResponse,
+        "description": "Error: Not Found",
+        "content": {
+            "application/json": {
+                "examples": {
+                    "example_1": {
+                        "summary": "Model error",
+                        "value": ErrorResponse(
+                            errors=[
+                                Error(
+                                    error_key="model_not_found",
+                                    error_message="Model is unknown",
+                                    error_loc=None,
+                                )
+                            ]
+                        ),
+                    },
+                    "example_2": {
+                        "summary": "User error",
+                        "value": ErrorResponse(
+                            errors=[
+                                Error(
+                                    error_key="user_not_found",
+                                    error_message="User is unknown",
+                                    error_loc=None,
+                                )
+                            ]
+                        ),
+                    },
+                }
+            },
+        },
+    },
+}
+
+
 @router.get(
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses=responses,
 )
 async def get_reco(
     request: Request,
     model_name: str,
     user_id: int,
-    token: HTTPAuthorizationCredentials = Depends(bearer_scheme)
+    token: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
