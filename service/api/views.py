@@ -1,11 +1,11 @@
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, FastAPI, Request, Path
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import ModelNotFoundError, UserNotFoundError
 from service.log import app_logger
-
+from service.api.RecModels import all_models
 
 class RecoResponse(BaseModel):
     user_id: int
@@ -30,18 +30,22 @@ async def health() -> str:
 )
 async def get_reco(
     request: Request,
-    model_name: str,
-    user_id: int,
+    model_name: str = Path(..., description='The name of testing model'),
+    user_id: int = Path(..., description='The specific id of user'),
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    # Write your code here
+    if model_name not in all_models:
+        raise ModelNotFoundError(error_message=f'There is no model with name {model_name}')
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
     k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
+    model = all_models[model_name]()
+    model.preparing()
+    reco = model.get_answer(user_id=user_id,
+                            k_recs=k_recs)
     return RecoResponse(user_id=user_id, items=reco)
 
 
