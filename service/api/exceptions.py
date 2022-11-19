@@ -26,3 +26,25 @@ class UserNotFoundError(AppException):
         error_loc: tp.Optional[tp.Sequence[str]] = None,
     ):
         super().__init__(status_code, error_key, error_message, error_loc)
+
+
+class WrongModelName(AppException):
+    def __init__(
+        self,
+        status_code: int = HTTPStatus.NOT_FOUND,
+        error_key: str = "Model doesn't exist",
+        error_message: str = "Model doesn't exist",
+        error_loc: tp.Optional[tp.Sequence[str]] = None,
+    ):
+        super().__init__(status_code, error_key, error_message, error_loc)
+
+
+class NotAuthUser(AppException):
+    def __init__(
+        self,
+        status_code: int = HTTPStatus.FORBIDDEN,
+        error_key: str = "Wrong token",
+        error_message: str = "Wrong token",
+        error_loc: tp.Optional[tp.Sequence[str]] = None,
+    ):
+        super().__init__(status_code, error_key, error_message, error_loc)

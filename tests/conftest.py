@@ -4,6 +4,7 @@ from starlette.testclient import TestClient
 
 from service.api.app import create_app
 from service.settings import ServiceConfig, get_config
+from creds import token
 
 
 @pytest.fixture
@@ -19,4 +20,6 @@ def app(service_config: ServiceConfig,) -> FastAPI:
 
 @pytest.fixture
 def client(app: FastAPI) -> TestClient:
-    return TestClient(app=app)
+    client = TestClient(app=app)
+    client.headers.setdefault("Authorization", token)
+    return client
