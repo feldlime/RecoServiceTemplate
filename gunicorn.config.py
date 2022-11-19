@@ -18,7 +18,7 @@ workers = env("GUNICORN_WORKERS", cpu_count())
 worker_class = env("GUNICORN_WORKER_CLASS", "uvicorn.workers.UvicornWorker")
 
 # The maximum number of requests a worker will process before restarting.
-max_requests = env("GUNICORN_MAX_REQUESTS", 1024)
+max_requests = env("GUNICORN_MAX_REQUESTS", 100000)
 
 # Workers silent for more than this many seconds are killed and restarted.
 timeout = env("GUNICORN_TIMEOUT", 3600)
@@ -27,7 +27,7 @@ timeout = env("GUNICORN_TIMEOUT", 3600)
 graceful_timeout = env("GUNICORN_GRACEFUL_TIMEOUT", 5)
 
 # The number of seconds to wait for requests on a Keep-Alive connection.
-keepalive = env("GUNICORN_KEEPALIVE", 5)
+keepalive = env("GUNICORN_KEEPALIVE", 15)
 
 # Detaches the server from the controlling terminal and enters the background.
 daemon = env("GUNICORN_DAEMON", False)
