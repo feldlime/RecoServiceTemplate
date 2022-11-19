@@ -1,6 +1,7 @@
 # Editors
 .vscode/
 .idea/
+.venv/
 
 # Mac/OSX
 .DS_Store

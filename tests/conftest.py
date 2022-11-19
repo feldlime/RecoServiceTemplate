@@ -1,4 +1,3 @@
-# pylint: disable=redefined-outer-name
 import pytest
 from fastapi import FastAPI
 from starlette.testclient import TestClient
