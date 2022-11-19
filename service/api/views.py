@@ -1,7 +1,8 @@
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, FastAPI, Request, HTTPException, status, Depends
 from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordBearer
 
 from service.api.exceptions import UserNotFoundError
 from service.log import app_logger
@@ -14,12 +15,23 @@ class RecoResponse(BaseModel):
 
 router = APIRouter()
 
+AUTH_TOKEN = "qwerty123"
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/getToken")
+
 
 @router.get(
     path="/health",
     tags=["Health"],
 )
-async def health() -> str:
+async def health(
+    token: str = Depends(oauth2_scheme)) -> str:
+    if token != AUTH_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect token",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
     return "I am alive"
 
 
@@ -32,7 +44,16 @@ async def get_reco(
     request: Request,
     model_name: str,
     user_id: int,
+    token: str = Depends(oauth2_scheme)
 ) -> RecoResponse:
+
+    if token != AUTH_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect token",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     # Write your code here
