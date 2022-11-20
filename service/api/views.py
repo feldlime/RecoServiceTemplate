@@ -1,47 +1,52 @@
-from typing import List, Optional, Sequence
+from __future__ import annotations
 
-import numpy as np
-from fastapi import APIRouter, FastAPI, Request
-from pydantic import BaseModel
+import random
+from typing import Union
 
+from decouple import config
+from fastapi import APIRouter, Depends, FastAPI, Request
+
+from service.api.auth.auth_bearer import JWTBearer
 from service.api.exceptions import ModelNotFoundError, UserNotFoundError
-from service.api.models import MODELS
 from service.log import app_logger
 
+from ..models import ForbiddenError, HealthResponse, HTTPValidationError, NotFoundError, RecoResponse, UnauthorizedError
 
-class RecoResponse(BaseModel):
-    user_id: int
-    items: List[int]
-
-
-class NotFoundError(BaseModel):
-    error_key: str
-    error_message: str
-    error_loc: Optional[Sequence[str]]
+MODELS = config("models")
 
 
 router = APIRouter()
 
 
-@router.get(
-    path="/health",
-    tags=["Health"],
-)
-async def health() -> str:
-    return "I am alive"
+@router.get(path="/health", tags=["Health"], response_model=HealthResponse)
+async def health() -> HealthResponse:
+    """
+    Check health
+    """
+    return HealthResponse(health="I am alive. Everything is OK!")
 
 
 @router.get(
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
+    dependencies=[Depends(JWTBearer())],
     response_model=RecoResponse,
-    responses={404: {"model": NotFoundError}, 200: {"model": RecoResponse}},
+    responses={
+        "200": {"model": RecoResponse},
+        "401": {"model": UnauthorizedError},
+        "403": {"model": ForbiddenError},
+        "404": {"model": NotFoundError},
+        "422": {"model": HTTPValidationError},
+    },
 )
 async def get_reco(
     request: Request,
     model_name: str,
     user_id: int,
-) -> RecoResponse:
+) -> Union[RecoResponse, UnauthorizedError, NotFoundError, HTTPValidationError]:
+    """
+    Get recommendations for user
+    """
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     if model_name not in MODELS:
@@ -56,8 +61,7 @@ async def get_reco(
 
     if model_name == "random":
         # Just a random generation of recomendations
-        np.random.seed(user_id)
-        reco = np.random.randint(10, 1000, size=k_recs).tolist()
+        reco = random.sample(range(1000), k_recs)
 
     return RecoResponse(user_id=user_id, items=reco)
 

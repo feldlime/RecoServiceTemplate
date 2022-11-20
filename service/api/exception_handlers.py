@@ -11,7 +11,7 @@ from service.log import app_logger
 from service.models import Error
 from service.response import create_response, server_error
 
-from .exceptions import AppException
+from .exceptions import AppException, ModelNotFoundError, UserNotFoundError
 
 
 async def default_error_handler(
@@ -62,9 +62,41 @@ async def app_exception_handler(
     return create_response(exc.status_code, errors=errors)
 
 
+async def model_not_found_exception_handler(
+    request: Request,
+    exc: ModelNotFoundError,
+) -> JSONResponse:
+    errors = [
+        Error(
+            error_key=exc.error_key,
+            error_message=exc.error_message,
+            error_loc=exc.error_loc,
+        )
+    ]
+    app_logger.error(str(errors))
+    return create_response(exc.status_code, errors=errors)
+
+
+async def user_not_found_exception_handler(
+    request: Request,
+    exc: UserNotFoundError,
+) -> JSONResponse:
+    errors = [
+        Error(
+            error_key=exc.error_key,
+            error_message=exc.error_message,
+            error_loc=exc.error_loc,
+        )
+    ]
+    app_logger.error(str(errors))
+    return create_response(exc.status_code, errors=errors)
+
+
 def add_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(HTTPException, http_error_handler)
     app.add_exception_handler(ValidationError, validation_error_handler)
     app.add_exception_handler(RequestValidationError, validation_error_handler)
     app.add_exception_handler(AppException, app_exception_handler)
+    app.add_exception_handler(UserNotFoundError, user_not_found_exception_handler)
+    app.add_exception_handler(ModelNotFoundError, model_not_found_exception_handler)
     app.add_exception_handler(Exception, default_error_handler)
