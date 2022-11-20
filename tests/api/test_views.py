@@ -64,7 +64,7 @@ def test_bearer_failed(
     path = GET_RECO_PATH.format(model_name="test_model", user_id=user_id)
     with client:
         response = client.get(
-            path, headers={"Authorization": f"Bearer {incorect_bearer}"}
+            path, headers={"Authorization": f"Bearer {incorrect_bearer}"}
         )
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert response.json()["errors"][0]["error_key"] == "incorrect_bearer_key"
