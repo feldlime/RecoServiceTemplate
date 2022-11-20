@@ -39,3 +39,13 @@ def test_get_reco_for_unknown_user(
         response = client.get(path)
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json()["errors"][0]["error_key"] == "user_not_found"
+
+def test_get_reco_for_unknow_model(
+    client: TestClient,
+) -> None:
+    user_id = 123
+    path = GET_RECO_PATH.format(model_name="unknow_model", user_id=user_id)
+    with client:
+        response = client.get(path)
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json()["errors"][0]["error_key"] == "model_name_not_found"
