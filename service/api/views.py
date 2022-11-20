@@ -44,7 +44,8 @@ responses = {
                     errors=[
                         Error(
                             error_key="incorrect_bearer_key",
-                            error_message="Authorization failure due to incorrect token",
+                            error_message=("Authorization failure"
+                                           "due to incorrect token"),
                             error_loc=None,
                         )
                     ]
@@ -110,7 +111,7 @@ responses = {
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
-    responses=responses,
+    responses=responses,  # type: ignore
 )
 async def get_reco(
     request: Request,
