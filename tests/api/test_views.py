@@ -40,6 +40,31 @@ def test_get_reco_for_unknown_user(
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json()["errors"][0]["error_key"] == "user_not_found"
 
-# TODO()
-#  1) Отсутствие модели (404),
-#  2) Не пройдена Bearer аутентификация (401)
+
+def test_get_reco_for_unknown_model(
+    client: TestClient,
+) -> None:
+    user_id = 123
+    incorrect_model = "_"
+    path = GET_RECO_PATH.format(model_name=incorrect_model, user_id=user_id)
+    path = GET_RECO_PATH.format(model_name="test_model", user_id=user_id)
+    with client:
+        response = client.get(
+            path, headers={"Authorization": f"Bearer {incorect_bearer}"}
+        )
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json()["errors"][0]["error_key"] == "model_not_found"
+
+
+def test_bearer_failed(
+    client: TestClient,
+) -> None:
+    user_id = 123
+    incorrect_bearer = "lasdkladsk"
+    path = GET_RECO_PATH.format(model_name="test_model", user_id=user_id)
+    with client:
+        response = client.get(
+            path, headers={"Authorization": f"Bearer {incorect_bearer}"}
+        )
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json()["errors"][0]["error_key"] == "incorrect_bearer_key"
