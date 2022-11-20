@@ -50,7 +50,7 @@ def test_get_reco_for_unknown_model(
     path = GET_RECO_PATH.format(model_name="test_model", user_id=user_id)
     with client:
         response = client.get(
-            path, headers={"Authorization": f"Bearer Team_5"}
+            path, headers={"Authorization": "Bearer Team_5"}
         )
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json()["errors"][0]["error_key"] == "model_not_found"

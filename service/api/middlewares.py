@@ -50,7 +50,7 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
                 msg=f"Caught unhandled {e.__class__} exception: {e}"
             )
             error = Error(
-                error_key="server_error", 
+                error_key="server_error",
                 error_message="Internal Server Error"
             )
             return server_error([error])
