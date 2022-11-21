@@ -1,10 +1,14 @@
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, FastAPI, Request, HTTPException, status, Depends
 from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import JSONResponse
 
 from service.api.exceptions import UserNotFoundError
 from service.log import app_logger
+from service.models import UserInDB
+from service.utils import fake_users_db, fake_hash_password, MODEL_NAMES
 
 
 class RecoResponse(BaseModel):
@@ -14,13 +18,21 @@ class RecoResponse(BaseModel):
 
 router = APIRouter()
 
+AUTH_TOKEN = "qwerty123"
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+
 
 @router.get(
     path="/health",
     tags=["Health"],
 )
-async def health() -> str:
-    return "I am alive"
+async def health(
+    token: str = Depends(oauth2_scheme)):
+
+    return JSONResponse(
+        content={'health': '36.6'},
+        status_code=status.HTTP_200_OK
+    )
 
 
 @router.get(
@@ -32,10 +44,15 @@ async def get_reco(
     request: Request,
     model_name: str,
     user_id: int,
+    token: str = Depends(oauth2_scheme)
 ) -> RecoResponse:
+
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     # Write your code here
+
+    if model_name not in MODEL_NAMES:
+        raise HTTPException(status_code=404, detail="Model not found")
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
@@ -43,6 +60,19 @@ async def get_reco(
     k_recs = request.app.state.k_recs
     reco = list(range(k_recs))
     return RecoResponse(user_id=user_id, items=reco)
+
+
+@router.post("/token")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user_dict = fake_users_db.get(form_data.username)
+    if not user_dict:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    user = UserInDB(**user_dict)
+    hashed_password = fake_hash_password(form_data.password)
+    if not hashed_password == user.hashed_password:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    return {"access_token": user.username, "token_type": "bearer"}
 
 
 def add_views(app: FastAPI) -> None:
