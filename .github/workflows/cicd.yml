@@ -1,5 +1,9 @@
 name: CICD
 on: [push]
+env:
+  secret: b'4c39eed4ffb16e4d1d9a61223e9a0fc26fdf88380940bede'
+  algorithm: HS256
+  models: random
 
 
 jobs:
