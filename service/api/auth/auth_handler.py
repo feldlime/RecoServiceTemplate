@@ -22,7 +22,7 @@ def decodeJWT(token: str) -> dict:
     try:
         decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         return decoded_token
-    except Exception:
+    except BaseException:
         return {}
 
 

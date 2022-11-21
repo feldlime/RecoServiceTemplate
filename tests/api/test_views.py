@@ -81,9 +81,8 @@ def test_get_reco_unauthorized_invalid_token(
 ) -> None:
     user_id = 123
     model_name = "random"
-    auth_token = "wrong_auth_token"
     path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
-    bad_token_headers = {"Authorization": f"Bearer {auth_token}"}
+    bad_token_headers = {"Authorization": "Bearer wrong_auth_token"}
     with client:
         response = client.get(path, headers=bad_token_headers)
     assert response.status_code == HTTPStatus.UNAUTHORIZED
