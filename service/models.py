@@ -16,21 +16,44 @@ class Error(BaseModel):
 
 
 class UnauthorizedError(BaseModel):
-    error_key: str = Field(..., title="Error Key")
-    error_message: str = Field(..., title="Error Message")
+    error_key: str = Field(..., title="http_exception")
+    error_message: str = Field(..., title="Invalid token or expired token.")
     error_loc: Optional[List[str]] = Field(None, title="Error Location")
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "error_key": "http_exception",
+                "error_message": "Invalid token or expired token.",
+                "error_loc": "",
+            }
+        }
 
 
 class ForbiddenError(BaseModel):
-    error_key: str = Field(..., title="Error Key")
-    error_message: str = Field(..., title="Error Message")
+    error_key: str = Field(..., title="http_exception")
+    error_message: str = Field(..., title="Not authenticated")
     error_loc: Optional[List[str]] = Field(None, title="Error Location")
+
+    class Config:
+        schema_extra = {
+            "example": {"error_key": "http_exception", "error_message": "Not authenticated", "error_loc": ""}
+        }
 
 
 class NotFoundError(BaseModel):
-    error_key: str = Field(..., title="Error Key")
-    error_message: str = Field(..., title="Error Message")
+    error_key: str = Field(..., title="model_not_found")
+    error_message: str = Field(..., title="Model <model_name> not found")
     error_loc: Optional[List[str]] = Field(None, title="Error Location")
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "error_key": "model_not_found",
+                "error_message": "Model <model_name> not found",
+                "error_loc": "",
+            }
+        }
 
 
 class ValidationError(BaseModel):
