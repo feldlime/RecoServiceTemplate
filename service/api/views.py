@@ -112,7 +112,7 @@ responses = {
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
-    responses=responses,
+    responses=responses,  # type: ignore
 )
 async def get_reco(
     request: Request,
