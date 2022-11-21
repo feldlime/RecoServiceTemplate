@@ -46,7 +46,7 @@ responses = {
                             error_key="incorrect_bearer_key",
                             error_message=(
                                 "Authorization failure due to incorrect token"
-                            ),
+                                ),
                             error_loc=None,
                         )
                     ]
@@ -122,11 +122,7 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    # Write your code here
-
     # TODO() 1. Добавить описание возможных ответов (401, 403,, 404) в сваггер
-    # TODO() 2. Покрыть тестами 401 ошибку аутентификации
-    #  и 404 ошибку отсутствия модели
     if token.credentials != "Team_5":
         raise BearerAccessTokenError()
     if user_id > 10**9:
