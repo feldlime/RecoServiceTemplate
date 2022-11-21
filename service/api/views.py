@@ -22,6 +22,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/getToken")
 @router.get(
     path="/health",
     tags=["Health"],
+    responses={401: {"description": "Incorrect authorization token"}},
 )
 async def health(
     token: str = Depends(oauth2_scheme)) -> str:
@@ -39,6 +40,8 @@ async def health(
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={404: {"description": "Incorrect user_id or model_name"},
+               401: {"description": "Incorrect authorization token"}},
 )
 async def get_reco(
     request: Request,
