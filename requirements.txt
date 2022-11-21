@@ -3,6 +3,7 @@ pytest==7.2.0
 uvicorn==0.19.0
 gunicorn==20.1.0
 httpx==0.23.1
+jupyter==1.0.0
 
 starlette~=0.21.0
 pydantic~=1.10.2
