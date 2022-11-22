@@ -1,10 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, FastAPI, HTTPException, Request
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import NeedToken, TokenNotFound, UserNotFoundError
 from service.log import app_logger
+
+TOKEN_OUR = "Phoenix"
 
 
 class RecoResponse(BaseModel):
@@ -40,10 +42,25 @@ async def get_reco(
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
+    try:
+        headers = dict(request.headers)
+        token = headers["authorization"].split()[1]
+    except:
+        raise NeedToken(error_message="for this request need token")
+    if token != TOKEN_OUR:
+        raise TokenNotFound(error_message=f"token {token} is not our")
+
     k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
+    # reco = list(range(k_recs))
+
+    if model_name == "our_model":
+        reco = list(range(k_recs))
+    else:
+        raise HTTPException(status_code=404, detail="not found model")
+        # reco = list(range(k_recs))[::-1 ]
     return RecoResponse(user_id=user_id, items=reco)
 
 
 def add_views(app: FastAPI) -> None:
     app.include_router(router)
+
