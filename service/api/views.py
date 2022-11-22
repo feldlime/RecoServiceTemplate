@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import UserNotFoundError, WrongModelNameError
 from service.log import app_logger
 
 
@@ -41,7 +41,12 @@ async def get_reco(
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
     k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
+    if model_name == 'test_model':
+        reco = list(range(k_recs))
+    else:
+        raise WrongModelNameError(
+            error_message=f"Wrong model name — '{model_name}'",
+        )
     return RecoResponse(user_id=user_id, items=reco)
 
 
