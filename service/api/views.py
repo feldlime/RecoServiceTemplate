@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 from service.api.exceptions import UserNotFoundError, WrongModelNameError
 from service.log import app_logger
+from service.models import Error
 
 
 class RecoResponse(BaseModel):
@@ -18,6 +19,54 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 router = APIRouter()
+
+
+unauthorized_examples = {
+    "Missing api key header": {
+        "value": [
+            {
+                "error_key": "http_exception",
+                "error_message": "Not authenticated",
+                "error_loc": None,
+            },
+        ],
+    },
+    "Wrong api key": {
+        "value": [
+            {
+                "error_key": "http_exception",
+                "error_message": "Wrong api key",
+                "error_loc": None,
+            },
+        ],
+    },
+}
+
+not_found_examples = {
+    "Unknown user": {
+        "value": [
+            {
+                "error_key": "user_not_found",
+                "error_message": "User is unknown",
+                "error_loc": None,
+            },
+        ],
+    },
+    "Wrong model name": {
+        "value": [
+            {
+                "error_key": "wrong_model_name",
+                "error_message": "Wrong model name",
+                "error_loc": None,
+            },
+        ],
+    },
+}
+
+recommendations_example = {
+  "user_id": 0,
+  "items": list(range(10)),
+}
 
 
 @router.get(
@@ -32,6 +81,32 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={
+        200: {
+            "description": "Recommendations for user",
+            "content": {
+                "application/json": {
+                    "example": recommendations_example,
+                },
+            },
+        },
+        401: {
+            "model": List[Error],
+            "content": {
+                "application/json": {
+                    "examples": unauthorized_examples,
+                },
+            },
+        },
+        404: {
+            "model": List[Error],
+            "content": {
+                "application/json": {
+                    "examples": not_found_examples,
+                },
+            },
+        },
+    },
 )
 async def get_reco(
     request: Request,
