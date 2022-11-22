@@ -1,0 +1,5 @@
+FROM python:3.8-buster as build
+
+WORKDIR /reco-app
+COPY . .
+CMD ["/bin/bash"]

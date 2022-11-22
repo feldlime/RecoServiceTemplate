@@ -10,7 +10,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "~3.8"
 fastapi = "^0.65.1"
 pydantic = "^1.8.2"
 gunicorn = "^20.1.0"
@@ -18,6 +18,9 @@ uvloop = "^0.15.2"
 uvicorn = "^0.14.0"
 orjson = "^3.7.7"
 starlette = "^0.14.2"
+lightfm = "1.16"
+implicit = "0.4.4"
+rectools = "0.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

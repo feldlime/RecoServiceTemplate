@@ -31,6 +31,8 @@ async def http_error_handler(
 ) -> JSONResponse:
     app_logger.error(str(exc))
     error = Error(error_key="http_exception", error_message=exc.detail)
+    if error.error_message == "Not authenticated":
+        return create_response(status_code=401, errors=[error])
     return create_response(status_code=exc.status_code, errors=[error])
 
 
