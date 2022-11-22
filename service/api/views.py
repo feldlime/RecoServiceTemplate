@@ -1,6 +1,8 @@
+from http import HTTPStatus
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
+from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
 from service.api.exceptions import UserNotFoundError, WrongModelNameError
@@ -10,6 +12,9 @@ from service.log import app_logger
 class RecoResponse(BaseModel):
     user_id: int
     items: List[int]
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 router = APIRouter()
@@ -32,10 +37,17 @@ async def get_reco(
     request: Request,
     model_name: str,
     user_id: int,
+    api_key: str = Depends(oauth2_scheme),
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     # Write your code here
+
+    if api_key != request.app.state.api_key:
+        raise HTTPException(
+            status_code=HTTPStatus.UNAUTHORIZED,
+            detail="Wrong api key",
+        )
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
