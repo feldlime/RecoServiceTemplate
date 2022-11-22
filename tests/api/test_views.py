@@ -9,9 +9,11 @@ GET_RECO_PATH = "/reco/{model_name}/{user_id}"
 
 def test_health(
     client: TestClient,
+    service_config: ServiceConfig,
 ) -> None:
+    api_key = "Bearer {api_key}".format(api_key=service_config.api_key)
     with client:
-        response = client.get("/health")
+        response = client.get("/health", headers={"Authorization": api_key})
     assert response.status_code == HTTPStatus.OK
 
 

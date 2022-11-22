@@ -73,7 +73,7 @@ recommendations_example = {
     path="/health",
     tags=["Health"],
 )
-async def health() -> str:
+async def health(api_key: str = Depends(oauth2_scheme)) -> str:
     return "I am alive"
 
 
