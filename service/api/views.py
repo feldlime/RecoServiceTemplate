@@ -28,6 +28,11 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={
+        200: {"description": "Return recommendations for users."},
+        401: {"description": "You are not authenticated"},
+        404: {"description": "The Model or User was not found"},
+    },
 )
 async def get_reco(
     request: Request,
