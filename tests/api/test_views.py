@@ -17,7 +17,7 @@ def test_health(
     assert response.status_code == HTTPStatus.OK
 
 
-def test_wrong_token(
+def test_empty_token(
     client: TestClient,
 ) -> None:
     user_id = 10**10
@@ -27,6 +27,18 @@ def test_wrong_token(
         response = client.get(path)
 
     assert response.status_code == HTTPStatus.FORBIDDEN
+
+
+def test_wrong_token(
+    client: TestClient,
+) -> None:
+    user_id = 10**10
+    path = GET_RECO_PATH.format(model_name=MODEL_NAME, user_id=user_id)
+    client.headers.update({"Authorization": "bearer KEK"})
+    with client:
+        response = client.get(path)
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
 def test_wrong_model_name(

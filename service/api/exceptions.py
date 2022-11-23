@@ -42,7 +42,7 @@ class WrongModelName(AppException):
 class NotAuthUser(AppException):
     def __init__(
         self,
-        status_code: int = HTTPStatus.FORBIDDEN,
+        status_code: int = HTTPStatus.UNAUTHORIZED,
         error_key: str = "Wrong token",
         error_message: str = "Wrong token",
         error_loc: tp.Optional[tp.Sequence[str]] = None,
