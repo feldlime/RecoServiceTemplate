@@ -19,7 +19,7 @@ class RecoResponse(BaseModel):
 router = APIRouter()
 
 AUTH_TOKEN = "qwerty123"
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/getToken")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
 @router.get(
@@ -80,19 +80,15 @@ async def get_reco(
     return RecoResponse(user_id=user_id, items=reco)
 
 
-@router.post("/getToken")
+@router.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user_dict = fake_users_db.get(form_data.username)
     if not user_dict:
-        raise HTTPException(
-            status_code=400, detail="Incorrect username or password"
-        )
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
     user = UserInDB(**user_dict)
     hashed_password = fake_hash_password(form_data.password)
     if not hashed_password == user.hashed_password:
-        raise HTTPException(
-            status_code=400, detail="Incorrect username or password"
-        )
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     return {"access_token": user.username, "token_type": "bearer"}
 
