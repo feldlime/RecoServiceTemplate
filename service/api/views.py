@@ -36,20 +36,10 @@ async def get_reco(
     token: HTTPAuthorizationCredentials = Depends(auth_scheme)
 ) -> RecoResponse:
 
-    if token:
-        token_api = token.credentials
-
-        if token_api != "api":
-            raise HTTPException(
-                status_code=401,
-                detail="wrong api key",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-    else:
+    if not token or token.credentials != request.app.state.api_key:
         raise HTTPException(
-
             status_code=401,
-            detail="wrong api key",
+            detail="Not authenticated",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

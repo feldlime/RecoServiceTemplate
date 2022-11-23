@@ -1,3 +1,4 @@
+import os
 from pydantic import BaseSettings
 
 
@@ -23,6 +24,7 @@ class LogConfig(Config):
 class ServiceConfig(Config):
     service_name: str = "reco_service"
     k_recs: int = 10
+    api_key: str = os.getenv('API_KEY', 'api')
 
     log_config: LogConfig
 
