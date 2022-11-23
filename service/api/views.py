@@ -25,9 +25,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 @router.get(
     path="/health",
     tags=["Health"],
+    responses={401: {"description": "Incorrect authorization token"}},
 )
 async def health(
-    token: str = Depends(oauth2_scheme)):
+    token: str = Depends(oauth2_scheme)) -> str:
+    if token != AUTH_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect token",
+            headers={"WWW-Authenticate": "Basic"},
+        )
 
     return JSONResponse(
         content={'health': '36.6'},
@@ -39,6 +46,8 @@ async def health(
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={404: {"description": "Incorrect user_id or model_name"},
+               401: {"description": "Incorrect authorization token"}},
 )
 async def get_reco(
     request: Request,
@@ -46,6 +55,13 @@ async def get_reco(
     user_id: int,
     token: str = Depends(oauth2_scheme)
 ) -> RecoResponse:
+
+    if token != AUTH_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect token",
+            headers={"WWW-Authenticate": "Basic"},
+        )
 
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
