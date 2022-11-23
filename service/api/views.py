@@ -24,7 +24,6 @@ async def health() -> str:
     return "I am alive"
 
 
-
 @router.get(
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
