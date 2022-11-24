@@ -17,6 +17,8 @@ CONTAINER_NAME := reco_service
 # Prepare
 
 .venv:
+	poetry run pip install lightfm
+	poetry run pip install implicit==0.4.4
 	poetry install --no-root
 	poetry check
 
