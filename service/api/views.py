@@ -22,10 +22,10 @@ available_models = ["recsys_model"]
 model_name = 'model.sav'
 dataset_name = 'dataset.sav'
 if not os.path.exists(model_name):
-    download_file_from_google_drive('1HCALVMCHKVPekBPq8_8HXW6oubM5Kgjv',
+    download_file_from_google_drive('1-FOStMxn6Z-VA22xE70aeLa0noWZEfIq',
                                     model_name)
 if not os.path.exists(dataset_name):
-    download_file_from_google_drive('1-FOStMxn6Z-VA22xE70aeLa0noWZEfIq',
+    download_file_from_google_drive('1HCALVMCHKVPekBPq8_8HXW6oubM5Kgjv',
                                     dataset_name)
 
 model = pickle.load(open(model_name, 'rb'))
