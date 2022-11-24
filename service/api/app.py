@@ -17,7 +17,8 @@ __all__ = ("create_app",)
 def setup_asyncio(thread_name_prefix: str) -> None:
     uvloop.install()
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 
     executor = ThreadPoolExecutor(thread_name_prefix=thread_name_prefix)
     loop.set_default_executor(executor)
@@ -35,6 +36,7 @@ def create_app(config: ServiceConfig) -> FastAPI:
 
     app = FastAPI(debug=False)
     app.state.k_recs = config.k_recs
+    app.state.admin_token = config.admin_token
 
     add_views(app)
     add_middlewares(app)
