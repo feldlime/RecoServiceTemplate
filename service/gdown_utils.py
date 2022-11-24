@@ -1,16 +1,16 @@
 import requests
 
 
-def download_file_from_google_drive(id, destination):
+def download_file_from_google_drive(file_id, destination):
     url = "https://docs.google.com/uc?export=download&confirm=t"
 
     session = requests.Session()
 
-    response = session.get(url, params={'id': id}, stream=True)
+    response = session.get(url, params={'id': file_id}, stream=True)
     token = get_confirm_token(response)
 
     if token:
-        params = {'id': id, 'confirm': token}
+        params = {'id': file_id, 'confirm': token}
         response = session.get(url, params=params, stream=True)
 
     save_response_content(response, destination)

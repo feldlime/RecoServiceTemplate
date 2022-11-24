@@ -49,13 +49,10 @@ isort: .venv
 flake: .venv
 	flake8 $(PROJECT) $(TESTS)
 
-mypy: .venv
-	mypy $(PROJECT) $(TESTS)
-
 pylint: .venv
 	pylint $(PROJECT) $(TESTS)
 
-lint: isort flake mypy pylint
+lint: isort flake pylint
 
 
 # Test

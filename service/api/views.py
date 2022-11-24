@@ -19,17 +19,17 @@ class RecoResponse(BaseModel):
 router = APIRouter()
 available_models = ["recsys_model"]
 
-model_name = 'model.sav'
-dataset_name = 'dataset.sav'
-if not os.path.exists(model_name):
+model_filename = 'model.sav'
+dataset_filename = 'dataset.sav'
+if not os.path.exists(model_filename):
     download_file_from_google_drive('1-FOStMxn6Z-VA22xE70aeLa0noWZEfIq',
-                                    model_name)
-if not os.path.exists(dataset_name):
+                                    model_filename)
+if not os.path.exists(dataset_filename):
     download_file_from_google_drive('1HCALVMCHKVPekBPq8_8HXW6oubM5Kgjv',
-                                    dataset_name)
+                                    dataset_filename)
 
-model = pickle.load(open(model_name, 'rb'))
-dataset = pickle.load(open(dataset_name, 'rb'))
+model = pickle.load(open(model_filename, 'rb'))
+dataset = pickle.load(open(dataset_filename, 'rb'))
 
 
 @router.get(
