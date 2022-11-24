@@ -1,3 +1,4 @@
+import os.path
 import pickle
 from typing import List
 
@@ -6,6 +7,7 @@ from pydantic import BaseModel
 
 from service.api.exceptions import ModelNotFoundError, UserNotFoundError
 from service.auth_bearer import JWTBearer
+from service.gdown_utils import download_file_from_google_drive
 from service.log import app_logger
 
 
@@ -16,8 +18,18 @@ class RecoResponse(BaseModel):
 
 router = APIRouter()
 available_models = ["recsys_model"]
-model = pickle.load(open('model.sav', 'rb'))
-dataset = pickle.load(open('dataset.sav', 'rb'))
+
+model_name = 'model.sav'
+dataset_name = 'dataset.sav'
+if not os.path.exists(model_name):
+    download_file_from_google_drive('1HCALVMCHKVPekBPq8_8HXW6oubM5Kgjv',
+                                    model_name)
+if not os.path.exists(dataset_name):
+    download_file_from_google_drive('1-FOStMxn6Z-VA22xE70aeLa0noWZEfIq',
+                                    dataset_name)
+
+model = pickle.load(open(model_name, 'rb'))
+dataset = pickle.load(open(dataset_name, 'rb'))
 
 
 @router.get(

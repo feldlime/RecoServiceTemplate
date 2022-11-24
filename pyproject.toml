@@ -21,6 +21,7 @@ starlette = "^0.14.2"
 lightfm = "1.16"
 implicit = "0.4.4"
 rectools = "0.3.0"
+gdown = "^4.5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
