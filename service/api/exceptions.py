@@ -37,3 +37,15 @@ class ModelNotFoundError(AppException):
         error_loc: tp.Optional[tp.Sequence[str]] = None,
     ):
         super().__init__(status_code, error_key, error_message, error_loc)
+
+
+class NotAuthenticatedError(AppException):
+    def __init__(
+        self,
+        status_code: int = HTTPStatus.UNAUTHORIZED,
+        error_key: str = "not_authenticated",
+        error_message: str = "User is not authenticated",
+        error_loc: tp.Optional[tp.Sequence[str]] = None,
+    ):
+        super().__init__(status_code, error_key, error_message, error_loc)
+

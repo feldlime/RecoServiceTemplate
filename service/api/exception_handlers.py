@@ -11,7 +11,7 @@ from service.log import app_logger
 from service.models import Error
 from service.response import create_response, server_error
 
-from .exceptions import AppException
+from .exceptions import AppException, NotAuthenticatedError
 
 
 async def default_error_handler(
@@ -32,7 +32,7 @@ async def http_error_handler(
     app_logger.error(str(exc))
     error = Error(error_key="http_exception", error_message=exc.detail)
     if error.error_message == "Not authenticated":
-        return create_response(status_code=401, errors=[error])
+        raise NotAuthenticatedError()
     return create_response(status_code=exc.status_code, errors=[error])
 
 

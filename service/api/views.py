@@ -47,6 +47,9 @@ async def health() -> str:
     responses={
         404: {
             "description": "Model not found"
+        },
+        401: {
+            "description": "Not authenticated"
         }
     },
     dependencies=[Depends(JWTBearer())]
