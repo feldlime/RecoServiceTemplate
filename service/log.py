@@ -8,7 +8,6 @@ access_logger = logging.getLogger("access")
 
 
 class ServiceNameFilter(logging.Filter):
-
     def __init__(self, name: str = "", service_name: str = "") -> None:
         self.service_name = service_name
 
