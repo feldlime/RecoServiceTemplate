@@ -1,20 +1,32 @@
-import os
+import logging
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request, Depends
+import numpy as np
+from fastapi import (
+    APIRouter,
+    Depends,
+    FastAPI,
+    Request,
+)
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+)
 from pydantic import BaseModel
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from models.model_zero import Model
-from models.model_utils import load_model
-from service.api.exceptions import UserNotFoundError, WrongModelName, NotAuthUser
-from service.log import app_logger
 from creds import token
+from recommendations.estimator import Estimator
+from recommendations.model_utils import load_model
+from service.api.exceptions import (
+    NotAuthUser,
+    UserNotFoundError,
+    WrongModelName,
+)
 
 router = APIRouter()
 security = HTTPBearer()
-# load model
-model: Model = load_model(os.getenv("MODEL_NAME", "model_0"))
+
+log = logging.getLogger(__name__)
 
 
 class RecoResponse(BaseModel):
@@ -22,7 +34,9 @@ class RecoResponse(BaseModel):
     items: List[int]
 
 
-def authorize(credentials: HTTPAuthorizationCredentials = Depends(security)):
+def authorize(
+    credentials: HTTPAuthorizationCredentials = Depends(security),  # noqa: B008
+):
     submitted_token: str = credentials.credentials
     is_token_ok = submitted_token == token.split()[-1]
 
@@ -42,24 +56,26 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
-    dependencies=[Depends(authorize)]
+    dependencies=[Depends(authorize)],
 )
 async def get_reco(
-        request: Request,
-        model_name: str,
-        user_id: int,
+    request: Request,
+    model_name: str,
+    user_id: int,
 ) -> RecoResponse:
-    app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
+    log.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    if user_id > 10 ** 9:
+    if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
-    if model_name != model.name:
+    try:
+        model: Estimator = load_model(model_name)
+    except ValueError:
         raise WrongModelName(error_message=f"Model {model_name} doesn't exist")
 
     k_recs = request.app.state.k_recs
-    predicts = model.predict(k_recs)
-    return RecoResponse(user_id=user_id, items=predicts)
+    recommendations: np.ndarray = model.recommend([user_id], k_recs)
+    return RecoResponse(user_id=user_id, items=recommendations.tolist())
 
 
 def add_views(app: FastAPI) -> None:

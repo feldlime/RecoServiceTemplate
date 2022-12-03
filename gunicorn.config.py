@@ -1,8 +1,6 @@
 from multiprocessing import cpu_count
 from os import getenv as env
 
-from service import log, settings
-
 # The socket to bind.
 host = env("HOST", "0.0.0.0")
 port = int(env("PORT", "8080"))
@@ -57,7 +55,7 @@ loglevel = env("GUNICORN_LOGLEVEL", "INFO")
 capture_output = env("GUNICORN_CAPTURE_OUTPUT", False)
 
 # The log config dictionary to use.
-logconfig_dict = log.get_config(settings.get_config())
+logconfig_dict = env("GUNICORN_LOGCONFIG_DICT", {})  # type: ignore
 
 # The maximum size of HTTP request line in bytes.
 # This parameter can be used to prevent any DDOS attack.

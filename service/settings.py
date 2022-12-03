@@ -2,21 +2,18 @@ from pydantic import BaseSettings
 
 
 class Config(BaseSettings):
-
     class Config:
         case_sensitive = False
 
 
 class LogConfig(Config):
-    level: str = "INFO"
+    level: str = "DEBUG"
     datetime_format: str = "%Y-%m-%d %H:%M:%S"
 
     class Config:
         case_sensitive = False
         fields = {
-            "level": {
-                "env": ["log_level"]
-            },
+            "level": {"env": ["log_level"]},
         }
 
 

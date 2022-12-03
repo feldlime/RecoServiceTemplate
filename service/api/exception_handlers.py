@@ -1,27 +1,33 @@
+import logging
 from typing import Union
 
-from fastapi import FastAPI, Request
+from fastapi import (
+    FastAPI,
+    Request,
+)
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 
-from service.log import app_logger
 from service.models import Error
-from service.response import create_response, server_error
+from service.response import (
+    create_response,
+    server_error,
+)
 
 from .exceptions import AppException
+
+log = logging.getLogger(__name__)
 
 
 async def default_error_handler(
     request: Request,
     exc: Exception,
 ) -> JSONResponse:
-    app_logger.error(str(exc))
-    error = Error(
-        error_key="server_error", error_message=str(exc)
-    )
+    log.error(f"Error: {exc}")
+    error = Error(error_key="server_error", error_message=str(exc))
     return server_error([error])
 
 
@@ -29,14 +35,13 @@ async def http_error_handler(
     request: Request,
     exc: HTTPException,
 ) -> JSONResponse:
-    app_logger.error(str(exc))
+    log.error(f"Error: {exc}")
     error = Error(error_key="http_exception", error_message=exc.detail)
     return create_response(status_code=exc.status_code, errors=[error])
 
 
 async def validation_error_handler(
-        request: Request,
-        exc: Union[RequestValidationError, ValidationError]
+    request: Request, exc: Union[RequestValidationError, ValidationError]
 ) -> JSONResponse:
     errors = [
         Error(
@@ -46,7 +51,7 @@ async def validation_error_handler(
         )
         for err in exc.errors()
     ]
-    app_logger.error(str(errors))
+    log.error(f"Errors: {errors}")
     return create_response(status.HTTP_422_UNPROCESSABLE_ENTITY, errors=errors)
 
 
@@ -61,7 +66,7 @@ async def app_exception_handler(
             error_loc=exc.error_loc,
         )
     ]
-    app_logger.error(str(errors))
+    log.error(f"Errors: {errors}")
     return create_response(exc.status_code, errors=errors)
 
 

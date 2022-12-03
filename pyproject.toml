@@ -1,0 +1,26 @@
+[tool.black]
+line-length = 80
+target-version = ['py310']
+exclude = '''
+/(
+  | \.git
+  | \.mypy_cache
+  | \.venv
+  | dist
+  | docs
+)/
+'''
+
+[tool.isort]
+profile = 'black'
+force_grid_wrap = 2
+combine_as_imports = true
+line_length = 80
+skip = ['docs', 'dist', 'venv', '.venv', 'build', 'deployme.egg-info', 'tutorial']
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+addopts = "--color=yes"
