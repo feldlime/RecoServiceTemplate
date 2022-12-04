@@ -1,0 +1,24 @@
+repos:
+  - repo: https://github.com/PyCQA/isort
+    rev: "5.10.1"
+    hooks:
+      - id: isort
+  - repo: https://github.com/PyCQA/flake8
+    rev: "4.0.1"
+    hooks:
+      - id: flake8
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+      - id: mypy
+        language: python
+        name: mypy
+        entry: mypy
+        args: [".", "--config-file", "mypy.ini"]
+        pass_filenames: false
+        types:
+          - "python"

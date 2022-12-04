@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import Dict
+from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
@@ -7,14 +7,22 @@ import scipy as sp
 from implicit.nearest_neighbours import ItemItemRecommender
 
 
-class UserKnn:
-    """Class for fit-perdict UserKNN model
+class UserKnn:  # pylint: disable=too-many-instance-attributes
+    """Class for fit-predict UserKNN model
        based on ItemKNN model from implicit.nearest_neighbours
     """
 
     def __init__(self, model: ItemItemRecommender, n_neighbors: int = 50):
+        self.weights_matrix = None
+        self.n = 1
+        self.user_knn = model
+        self.watched = None
+        self.item_idf = None
+        self.items_mapping = None
+        self.items_inv_mapping = None
+        self.users_inv_mapping = None
+        self.users_mapping = None
         self.N_users = n_neighbors
-        self.model = model
         self.is_fitted = False
 
     def get_mappings(self, train):
@@ -39,8 +47,8 @@ class UserKnn:
         interaction_matrix = sp.sparse.coo_matrix((
             weights,
             (
-                df[user_col].map(self.users_mapping.get),
-                df[item_col].map(self.items_mapping.get)
+                df[user_col].map(self.users_mapping.get),  # type: ignore
+                df[item_col].map(self.items_mapping.get)  # type: ignore
             )
         ))
 
@@ -51,15 +59,15 @@ class UserKnn:
         return np.log((1 + n) / (1 + x) + 1)
 
     def _count_item_idf(self, df: pd.DataFrame):
-        item_cnt = Counter(df['item_id'].values)
+        item_cnt = Counter(df['item_id'].values)  # type: ignore
         item_idf = pd.DataFrame.from_dict(item_cnt, orient='index',
                                           columns=['doc_freq']).reset_index()
         item_idf['idf'] = item_idf['doc_freq'].apply(
-            lambda x: self.idf(self.n, x))
+            lambda x: self.idf(self.n, x)
+        )
         self.item_idf = item_idf
 
     def fit(self, train: pd.DataFrame):
-        self.user_knn = self.model
         self.get_mappings(train)
         self.weights_matrix = self.get_matrix(train)
 
@@ -69,9 +77,13 @@ class UserKnn:
         self.user_knn.fit(self.weights_matrix)
         self.is_fitted = True
 
-    def _generate_recs_mapper(self, model: ItemItemRecommender,
-                              user_mapping: Dict[int, int],
-                              user_inv_mapping: Dict[int, int], N: int):
+    @staticmethod
+    def _generate_recs_mapper(
+        model: ItemItemRecommender,
+        user_mapping: Optional[Dict[int, int]],
+        user_inv_mapping: Optional[Dict[int, int]],
+        N: int
+    ):
         def _recs_mapper(user):
             user_id = user_mapping[user]
             recs = model.similar_items(user_id, N=N)
@@ -112,5 +124,3 @@ class UserKnn:
         predict = recs[recs['rank'] <= n_recs]
         predict = predict[['user_id', 'item_id', 'score', 'rank']]
         return predict
-
-

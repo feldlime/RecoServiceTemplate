@@ -1,7 +1,6 @@
 from http import HTTPStatus
-from starlette.testclient import TestClient
 
-from service.settings import ServiceConfig
+from starlette.testclient import TestClient
 
 
 def test_health(
