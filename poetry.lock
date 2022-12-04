@@ -406,6 +406,19 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "implicit"
+version = "0.6.1"
+description = "Collaborative Filtering for Implicit Feedback Datasets"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+numpy = "*"
+scipy = ">=0.16"
+tqdm = ">=4.27"
+
+[[package]]
 name = "importlib-metadata"
 version = "5.1.0"
 description = "Read metadata from Python packages"
@@ -1632,6 +1645,23 @@ optional = false
 python-versions = ">= 3.7"
 
 [[package]]
+name = "tqdm"
+version = "4.64.1"
+description = "Fast, Extensible Progress Meter"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+dev = ["py-make (>=0.1.0)", "twine", "wheel"]
+notebook = ["ipywidgets (>=6)"]
+slack = ["slack-sdk"]
+telegram = ["requests"]
+
+[[package]]
 name = "traitlets"
 version = "5.6.0"
 description = "Traitlets Python configuration system"
@@ -1772,7 +1802,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "523aa035cc5872d6aa64de3bc2f795362eaf70d4730c872a52be9f08083e7572"
+content-hash = "c80cddbc937d20ad45c1360824bb3e9093744fba225a42dc332649f2b10681ab"
 
 [metadata.files]
 anyio = [
@@ -2073,6 +2103,29 @@ h11 = [
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
     {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
+]
+implicit = [
+    {file = "implicit-0.6.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:e9acad8508e11589c27a31b4111addeff1839cc555feda462dceb86b2ac382fa"},
+    {file = "implicit-0.6.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:fe7fa8838465ef1bc9246b7498f0e15c2a2bda8615cff3dc3195dfb4feceecdc"},
+    {file = "implicit-0.6.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:7fa64a55769ca9e140a343672e381c0bd112d14d590d5ad3cbd99df90f9a4f02"},
+    {file = "implicit-0.6.1-cp310-cp310-manylinux2014_x86_64.whl", hash = "sha256:dcdba18d7293a74ea13ad5f468cf00965048ace81254a262c3a6fa5356f759d8"},
+    {file = "implicit-0.6.1-cp310-cp310-win_amd64.whl", hash = "sha256:414bac3c688a9f03522fe753b75d6fd2d09d0e09ad6d2a4f544aadab67d7a16f"},
+    {file = "implicit-0.6.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:711c4494b93c927e5cf957a224d67ba8e957053afbd7b2d55bc76f15da9ea4f4"},
+    {file = "implicit-0.6.1-cp36-cp36m-manylinux2014_x86_64.whl", hash = "sha256:f6b750568ee524ae56a5185d594503685987fc5c1968a2058850404b0c3a994c"},
+    {file = "implicit-0.6.1-cp36-cp36m-win_amd64.whl", hash = "sha256:be65ad838d0d2a03f4d10542a137ffaaba6993868180fc0893d80a7fe81be1ca"},
+    {file = "implicit-0.6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:07eeb24208a651abed85cfd337b75499057176fb55813605e6865648316991fa"},
+    {file = "implicit-0.6.1-cp37-cp37m-manylinux2014_x86_64.whl", hash = "sha256:2581f7d419e195a321509f637f4f42c6136ffc08707080e39b3820f94fd37039"},
+    {file = "implicit-0.6.1-cp37-cp37m-win_amd64.whl", hash = "sha256:01814a302de28c1eb9f582203b37a9735b243383aaf1218cab1bbaf8a58fae8b"},
+    {file = "implicit-0.6.1-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:19d8b7e6509f225340ab13e9fa7659619c3b0d683c22ef98a551c4e0b75583dc"},
+    {file = "implicit-0.6.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:22dc374fcdead642cb9b29e7b333377260d789a9180b17e87248d914999952fa"},
+    {file = "implicit-0.6.1-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:747cfc1f6daa4ee30d02fb2069da1cd87c470d40aecf9a10b23f01d93b12f94b"},
+    {file = "implicit-0.6.1-cp38-cp38-manylinux2014_x86_64.whl", hash = "sha256:5054fac3f4d4a41ed590f69f7f9390f240b2bee4e6554ec03a6335c65b549142"},
+    {file = "implicit-0.6.1-cp38-cp38-win_amd64.whl", hash = "sha256:3e4cce205280c752088f8c48038831b33a90e046e38370550cf5107b1ba357cc"},
+    {file = "implicit-0.6.1-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:96a3260cf21396e90722e316624e45344faacd44437e9479f0ef91cce9f8dd2b"},
+    {file = "implicit-0.6.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:4ef0aeca203d9db73b16e7eba6db861e22106280f7ceec2873a24a20c69a7da0"},
+    {file = "implicit-0.6.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:657d15c0184b5afbeb4db6eb681d58032c7c1471a643d9e18d9a354172ec4eb6"},
+    {file = "implicit-0.6.1-cp39-cp39-manylinux2014_x86_64.whl", hash = "sha256:42abe47b71a5b45aa3336b8d7837d4cfd9224742844b273c16ee2da43dc9c767"},
+    {file = "implicit-0.6.1-cp39-cp39-win_amd64.whl", hash = "sha256:4a93e682bf827895cf7e4b68ea554cd20b4fca6c0ea301dc7223937f5f39027a"},
 ]
 importlib-metadata = [
     {file = "importlib_metadata-5.1.0-py3-none-any.whl", hash = "sha256:d84d17e21670ec07990e1044a99efe8d615d860fd176fc29ef5c306068fda313"},
@@ -3069,6 +3122,10 @@ tornado = [
     {file = "tornado-6.2-cp37-abi3-win32.whl", hash = "sha256:5c87076709343557ef8032934ce5f637dbb552efa7b21d08e89ae7619ed0eb23"},
     {file = "tornado-6.2-cp37-abi3-win_amd64.whl", hash = "sha256:e5f923aa6a47e133d1cf87d60700889d7eae68988704e20c75fb2d65677a8e4b"},
     {file = "tornado-6.2.tar.gz", hash = "sha256:9b630419bde84ec666bfd7ea0a4cb2a8a651c2d5cccdbdd1972a0c859dfc3c13"},
+]
+tqdm = [
+    {file = "tqdm-4.64.1-py2.py3-none-any.whl", hash = "sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1"},
+    {file = "tqdm-4.64.1.tar.gz", hash = "sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4"},
 ]
 traitlets = [
     {file = "traitlets-5.6.0-py3-none-any.whl", hash = "sha256:1410755385d778aed847d68deb99b3ba30fbbf489e17a1e8cbb753060d5cce73"},
