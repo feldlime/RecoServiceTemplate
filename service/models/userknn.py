@@ -1,5 +1,4 @@
-from collections import Counter
-from typing import Dict, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -8,24 +7,30 @@ from implicit.nearest_neighbours import ItemItemRecommender
 
 
 class UserKnn:  # pylint: disable=too-many-instance-attributes
-    """Class for fit-predict UserKNN model
-       based on ItemKNN model from implicit.nearest_neighbours
+    """
+    Class for fit-predict UserKNN model and BM25
+    based on ItemKNN model from implicit.nearest_neighbours
     """
 
-    def __init__(self, model: ItemItemRecommender, n_neighbors: int = 50):
-        self.weights_matrix = None
-        self.n = 1
-        self.user_knn = model
-        self.watched = None
-        self.item_idf = None
-        self.items_mapping = None
-        self.items_inv_mapping = None
-        self.users_inv_mapping = None
-        self.users_mapping = None
-        self.N_users = n_neighbors
+    def __init__(
+        self,
+        dist_model: ItemItemRecommender,
+        n_neighbors: int = 50,
+        verbose: int = 1,
+    ) -> None:
+        self.n_neighbors = n_neighbors
+        self.dist_model = dist_model
         self.is_fitted = False
+        self.verbose = verbose
 
-    def get_mappings(self, train):
+        self.users_inv_mapping: Optional[dict[int, int]] = None
+        self.users_mapping: Optional[dict[int, int]] = None
+        self.items_inv_mapping: Optional[dict[int, int]] = None
+        self.items_mapping: Optional[dict[int, int]] = None
+        self.weights_matrix = None
+        self.users_watched = None
+
+    def get_mappings(self, train) -> None:
         self.users_inv_mapping = dict(enumerate(train['user_id'].unique()))
         self.users_mapping = {v: k for k, v in self.users_inv_mapping.items()}
 
@@ -36,9 +41,8 @@ class UserKnn:  # pylint: disable=too-many-instance-attributes
         self, df: pd.DataFrame,
         user_col: str = 'user_id',
         item_col: str = 'item_id',
-        weight_col: str = None
+        weight_col: str = None,
     ):
-
         if weight_col:
             weights = df[weight_col].astype(np.float32)
         else:
@@ -52,75 +56,76 @@ class UserKnn:  # pylint: disable=too-many-instance-attributes
             )
         ))
 
-        self.watched = df.groupby(user_col).agg({item_col: list})
-        return interaction_matrix
+        self.users_watched = df.groupby(user_col).agg({item_col: list})
+        return interaction_matrix.tocsr().T
 
-    def idf(self, n: int, x: float):
-        return np.log((1 + n) / (1 + x) + 1)
-
-    def _count_item_idf(self, df: pd.DataFrame):
-        item_cnt = Counter(df['item_id'].values)  # type: ignore
-        item_idf = pd.DataFrame.from_dict(item_cnt, orient='index',
-                                          columns=['doc_freq']).reset_index()
-        item_idf['idf'] = item_idf['doc_freq'].apply(
-            lambda x: self.idf(self.n, x)
-        )
-        self.item_idf = item_idf
-
-    def fit(self, train: pd.DataFrame):
+    def fit(self, train: pd.DataFrame) -> None:
         self.get_mappings(train)
         self.weights_matrix = self.get_matrix(train)
 
-        self.n = train.shape[0]
-        self._count_item_idf(train)
-
-        self.user_knn.fit(self.weights_matrix)
+        self.dist_model.fit(
+            self.weights_matrix,
+            show_progress=(self.verbose > 0)
+        )
         self.is_fitted = True
 
     @staticmethod
     def _generate_recs_mapper(
         model: ItemItemRecommender,
-        user_mapping: Optional[Dict[int, int]],
-        user_inv_mapping: Optional[Dict[int, int]],
-        N: int
+        user_mapping: Optional[dict[int, int]],
+        user_inv_mapping: Optional[dict[int, int]],
+        n_neighbors: int
     ):
         def _recs_mapper(user):
             user_id = user_mapping[user]
-            recs = model.similar_items(user_id, N=N)
-            mapper = [user_inv_mapping[user] for user, _ in recs], \
-                     [sim for _, sim in recs]
-            return mapper
-
+            recs = model.similar_items(user_id, N=n_neighbors)
+            return (
+                [user_inv_mapping[user] for user, _ in zip(*recs)],
+                [sim for _, sim in zip(*recs)]
+            )
         return _recs_mapper
 
-    def predict(self, test: pd.DataFrame, n_recs: int = 10):
+    def predict_user(self, user_id: int, n_recs: int = 10) -> list[int]:
+        recs = pd.DataFrame({'user_id': [user_id]})
+        predict = self.predict(recs=recs, n_recs=n_recs)
+        return predict
+
+    def predict(self, recs: pd.DataFrame, n_recs: int = 10) -> list[int]:
 
         if not self.is_fitted:
-            raise ValueError("Please call fit before predict")
+            raise ValueError("Fit model before predicting")
 
         mapper = self._generate_recs_mapper(
-            model=self.user_knn,
+            model=self.dist_model,
             user_mapping=self.users_mapping,
             user_inv_mapping=self.users_inv_mapping,
-            N=self.N_users
+            n_neighbors=self.n_neighbors
         )
 
-        recs = pd.DataFrame({'user_id': test['user_id'].unique()})
-        recs['sim_user_id'], recs['sim'] = zip(*recs['user_id'].map(mapper))
+        try:
+            recs['sim_user_id'], recs['sim'] = zip(
+                *recs['user_id'].map(mapper)
+            )
+        except BaseException:  # pylint: disable=broad-except
+            return []
+
         recs = recs.set_index('user_id').apply(pd.Series.explode).reset_index()
 
-        recs = recs.merge(
-            self.watched, left_on=['sim_user_id'], right_on=['user_id'],
-            how='left') \
-            .explode('item_id') \
-            .sort_values(['user_id', 'sim'], ascending=False) \
-            .drop_duplicates(['user_id', 'item_id'], keep='first') \
-            .merge(self.item_idf, left_on='item_id', right_on='index',
-                   how='left')
+        recs = (
+            recs
+            .merge(
+                self.users_watched,
+                left_on=['sim_user_id'],
+                right_on=['user_id'],
+                how='left'
+            )
+            .explode('item_id')
+            .drop_duplicates(['user_id', 'item_id'], keep='first')
+            .sort_values(['user_id', 'sim'], ascending=False)
+        )
 
-        recs['score'] = recs['sim'] * recs['idf']
-        recs = recs.sort_values(['user_id', 'score'], ascending=False)
         recs['rank'] = recs.groupby('user_id').cumcount() + 1
-        predict = recs[recs['rank'] <= n_recs]
-        predict = predict[['user_id', 'item_id', 'score', 'rank']]
+
+        result = recs[recs['rank'] <= n_recs][['user_id', 'item_id', 'rank']]
+        predict = result.item_id.tolist()[:n_recs]
         return predict
