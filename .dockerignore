@@ -2,6 +2,7 @@
 !service
 !gunicorn.config.py
 !main.py
-!poetry.lock
+!requirements.txt
 !pyproject.toml
 !README.md
+!models

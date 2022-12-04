@@ -1,3 +1,6 @@
+# Models
+*.pickle
+
 # Datasets
 data/
 
