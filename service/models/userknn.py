@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -72,25 +72,25 @@ class UserKnn:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def _generate_recs_mapper(
         model: ItemItemRecommender,
-        user_mapping: Optional[dict[int, int]],
-        user_inv_mapping: Optional[dict[int, int]],
+        user_mapping: Optional[Dict[int, int]],
+        user_inv_mapping: Optional[Dict[int, int]],
         n_neighbors: int
     ):
         def _recs_mapper(user):
             user_id = user_mapping[user]
             recs = model.similar_items(user_id, N=n_neighbors)
             return (
-                [user_inv_mapping[user] for user, _ in zip(*recs)],
-                [sim for _, sim in zip(*recs)]
+                [user_inv_mapping[user[0][0]] for user in zip(recs)],
+                [sim[0][1] for sim in zip(recs)]
             )
         return _recs_mapper
 
-    def predict_user(self, user_id: int, n_recs: int = 10) -> list[int]:
+    def predict_user(self, user_id: int, n_recs: int = 10) -> List[int]:
         recs = pd.DataFrame({'user_id': [user_id]})
         predict = self.predict(recs=recs, n_recs=n_recs)
         return predict
 
-    def predict(self, recs: pd.DataFrame, n_recs: int = 10) -> list[int]:
+    def predict(self, recs: pd.DataFrame, n_recs: int = 10) -> List[int]:
 
         if not self.is_fitted:
             raise ValueError("Fit model before predicting")
@@ -102,12 +102,9 @@ class UserKnn:  # pylint: disable=too-many-instance-attributes
             n_neighbors=self.n_neighbors
         )
 
-        try:
-            recs['sim_user_id'], recs['sim'] = zip(
-                *recs['user_id'].map(mapper)
-            )
-        except BaseException:  # pylint: disable=broad-except
-            return []
+        recs['sim_user_id'], recs['sim'] = zip(
+            *recs['user_id'].map(mapper)
+        )
 
         recs = recs.set_index('user_id').apply(pd.Series.explode).reset_index()
 
@@ -127,5 +124,4 @@ class UserKnn:  # pylint: disable=too-many-instance-attributes
         recs['rank'] = recs.groupby('user_id').cumcount() + 1
 
         result = recs[recs['rank'] <= n_recs][['user_id', 'item_id', 'rank']]
-        predict = result.item_id.tolist()[:n_recs]
-        return predict
+        return result
