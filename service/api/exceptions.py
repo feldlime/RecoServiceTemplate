@@ -26,3 +26,25 @@ class UserNotFoundError(AppException):
         error_loc: tp.Optional[tp.Sequence[str]] = None,
     ):
         super().__init__(status_code, error_key, error_message, error_loc)
+
+
+class ModelNotFoundError(AppException):
+    def __init__(
+        self,
+        status_code: int = HTTPStatus.NOT_FOUND,
+        error_key: str = "model_not_found",
+        error_message: str = "Model is unknown",
+        error_loc: tp.Optional[tp.Sequence[str]] = None,
+    ):
+        super().__init__(status_code, error_key, error_message, error_loc)
+
+
+class InvalidTokenError(AppException):
+    def __init__(
+        self,
+        status_code: int = HTTPStatus.UNAUTHORIZED,
+        error_key: str = "invalid_token",
+        error_message: str = "Invalid token",
+        error_loc: tp.Optional[tp.Sequence[str]] = None,
+    ):
+        super().__init__(status_code, error_key, error_message, error_loc)

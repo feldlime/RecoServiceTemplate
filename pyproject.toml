@@ -18,6 +18,8 @@ uvloop = "^0.15.2"
 uvicorn = "^0.14.0"
 orjson = "^3.7.7"
 starlette = "^0.14.2"
+python-dotenv = "^0.21.0"
+black = "^22.10.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
