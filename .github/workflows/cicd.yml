@@ -13,6 +13,7 @@ jobs:
         with:
           python-version: "3.8"
       - run: pip install poetry
+      - run: poetry run pip install lightfm
       - run: make setup
       - run: make lint
       - run: make test
