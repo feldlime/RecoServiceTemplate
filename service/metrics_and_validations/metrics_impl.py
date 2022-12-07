@@ -4,9 +4,9 @@ import pandas as pd
 from rectools import Columns
 
 
-def plook(ind, rels):
+def plook(ind, rels) -> float:
     if ind == 0:
-        return 1
+        return 1.
     return plook(ind - 1, rels) * (1 - rels[ind - 1]) * (1 - 0.15)
 
 
@@ -15,7 +15,7 @@ def pfound(group):
     max_by_host = group.groupby("hostid")["rating"].max()
     # берем топ10 урлов с наивысшим рейтингом
     top10 = max_by_host.sort_values(ascending=False).iloc[:10]
-    pfound = 0
+    pfound = 0.
     for ind, val in enumerate(top10):
         pfound += val * plook(ind, top10.values)
     return pfound
@@ -32,7 +32,7 @@ def pfound_fast(group):
 
 
 def mrr_naive(users, target, recs):
-    mrr = [0 for _ in users]
+    mrr = [0. for _ in users]
     for i, user in enumerate(users):
         rr = 0
         user_target = target[target[:, 0] == user][:, 1]
@@ -50,11 +50,11 @@ def mrr_numba(users, target, recs):
     rr = np.zeros(len(users))
     for i in nb.prange(len(rr)):
         user = users[i]
-        p = 0
+        p = 0.
         user_target = target[target[:, 0] == user][:, 1]
         for ind, rec in enumerate(recs[i]):
             if rec in user_target:
-                p = 1 / (ind + 1)
+                p = 1. / (ind + 1.)
                 break
         rr[i] = p
     return sum(rr) / len(rr)
