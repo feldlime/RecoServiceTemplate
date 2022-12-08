@@ -7,4 +7,4 @@ class RandomModel(RecsysBaseModel):
     """Return random sequence
     """
     def get_items_reco(self, user_id: int, size: int = 10) -> List[int]:
-        return [i for i in range(size)]
+        return list(range(size))

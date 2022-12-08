@@ -38,12 +38,11 @@ async def get_access_key(
 ) -> str:
     if access_key_from_header == ACCESS_KEY:
         return access_key_from_header
-    elif access_key_from_query == ACCESS_KEY:
+    if access_key_from_query == ACCESS_KEY:
         return access_key_from_query
-    elif token is not None and token.credentials == ACCESS_KEY:
+    if token is not None and token.credentials == ACCESS_KEY:
         return token.credentials
-    else:
-        raise AuthorizationError(error_message="Token is invalid")
+    raise AuthorizationError(error_message="Token is invalid")
 
 
 @router.get(
@@ -63,7 +62,6 @@ async def health() -> str:
         401: {"description": "Authorization failed"},
     },
 )
-
 async def get_reco(
     request: Request,
     model_name: str,

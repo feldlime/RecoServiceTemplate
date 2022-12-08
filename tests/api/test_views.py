@@ -6,7 +6,6 @@ from starlette.testclient import TestClient
 
 from service.settings import ServiceConfig
 
-
 GET_RECO_PATH = "/reco/{model_name}/{user_id}"
 ACCESS_TOKEN = os.getenv("ACCESS_KEY", "12345678")
 
