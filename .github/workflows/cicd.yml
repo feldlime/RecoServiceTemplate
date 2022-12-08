@@ -16,5 +16,5 @@ jobs:
       - run: make setup
       - run: make lint
       - env:
-           ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+          ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
       - run: make test
