@@ -1,6 +1,5 @@
 name: CICD
 on: [push]
-branch: [hw1]
 
 
 jobs:
