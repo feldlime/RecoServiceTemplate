@@ -24,7 +24,7 @@ router = APIRouter()
 models = init_config()
 
 
-ACCESS_KEY = os.getenv("ACCESS_KEY", "")
+ACCESS_KEY = os.getenv("ACCESS_KEY", "12345678")
 
 access_key_query = APIKeyQuery(name="access_key", auto_error=False)
 access_key_header = APIKeyHeader(name="access_key", auto_error=False)
