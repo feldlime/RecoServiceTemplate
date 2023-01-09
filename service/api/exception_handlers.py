@@ -19,9 +19,7 @@ async def default_error_handler(
     exc: Exception,
 ) -> JSONResponse:
     app_logger.error(str(exc))
-    error = Error(
-        error_key="server_error", error_message=str(exc)
-    )
+    error = Error(error_key="server_error", error_message=str(exc))
     return server_error([error])
 
 
@@ -35,8 +33,7 @@ async def http_error_handler(
 
 
 async def validation_error_handler(
-        request: Request,
-        exc: Union[RequestValidationError, ValidationError]
+    request: Request, exc: Union[RequestValidationError, ValidationError]
 ) -> JSONResponse:
     errors = [
         Error(

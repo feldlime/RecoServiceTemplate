@@ -36,13 +36,19 @@ clean:
 isort_fix: .venv
 	isort $(PROJECT) $(TESTS)
 
-format: isort_fix
+black_fix: .venv
+	black $(PROJECT) $(TESTS)
+
+format: isort_fix black_fix
 
 
 # Lint
 
 isort: .venv
 	isort --check $(PROJECT) $(TESTS)
+
+black: .venv
+	black --check $(PROJECT) $(TESTS)
 
 flake: .venv
 	flake8 $(PROJECT) $(TESTS)
@@ -53,7 +59,7 @@ mypy: .venv
 pylint: .venv
 	pylint $(PROJECT) $(TESTS)
 
-lint: isort flake mypy pylint
+lint: isort flake mypy pylint black
 
 
 # Test

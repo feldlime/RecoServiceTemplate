@@ -14,7 +14,6 @@ from service.response import server_error
 
 
 class AccessMiddleware(BaseHTTPMiddleware):
-
     async def dispatch(
         self,
         request: Request,
@@ -39,7 +38,6 @@ class AccessMiddleware(BaseHTTPMiddleware):
 
 
 class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
-
     async def dispatch(
         self,
         request: Request,
@@ -48,12 +46,9 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
         try:
             return await call_next(request)
         except Exception as e:  # pylint: disable=W0703,W1203
-            app_logger.exception(
-                msg=f"Caught unhandled {e.__class__} exception: {e}"
-            )
+            app_logger.exception(msg=f"Caught unhandled {e.__class__} exception: {e}")
             error = Error(
-                error_key="server_error",
-                error_message="Internal Server Error"
+                error_key="server_error", error_message="Internal Server Error"
             )
             return server_error([error])
 
@@ -64,7 +59,7 @@ def add_middlewares(app: FastAPI) -> None:
     app.add_middleware(AccessMiddleware)
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=['*'],
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
