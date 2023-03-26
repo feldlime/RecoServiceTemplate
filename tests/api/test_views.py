@@ -33,9 +33,49 @@ def test_get_reco_success(
 def test_get_reco_for_unknown_user(
     client: TestClient,
 ) -> None:
-    user_id = 10**10
+    user_id = 10 ** 10
     path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
     with client:
         response = client.get(path)
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json()["errors"][0]["error_key"] == "user_not_found"
+
+
+def test_get_reco_with_invalid_token(
+    client: TestClient,
+) -> None:
+    user_id = 123
+    path = GET_RECO_PATH.format(model_name="test_model", user_id=user_id)
+    with client:
+        response = client.get(
+            path,
+            headers={"Authorization": "Bearer -1"},
+        )
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json()["errors"][0]["error_key"] == "http_exception"
+
+def test_get_reco_without_token(
+    client: TestClient,
+) -> None:
+    user_id = 123
+    path = GET_RECO_PATH.format(model_name="test_model", user_id=user_id)
+    with client:
+        response = client.get(path)
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json()["errors"][0]["error_key"] == "http_exception"
+
+
+def test_get_reco_with_unknown_model(
+    client: TestClient,
+) -> None:
+    user_id = 123
+    model_name = '0'
+    path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
+    with client:
+        response = client.get(
+            path,
+            headers={"Authorization": f"Bearer {config['token']}"},
+        )
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json()["errors"][0]["error_key"] == "model_not_found"
+
