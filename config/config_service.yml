@@ -2,4 +2,4 @@ config:
     # Authorization
     token: "DBSEBJIPQXJKYODN"
     # Existing models
-    models: ['userknn_model', 'popular_model', 'als_model', 'ann_model', 'svd_model', 'lightfm_model']
+    models: ['popular_model', 'userknn_model', 'als_model', 'ann_model', 'svd_model', 'lightfm_model']
