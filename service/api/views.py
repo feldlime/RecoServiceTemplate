@@ -1,10 +1,14 @@
 from typing import List
+import yaml
 
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
 from service.api.exceptions import UserNotFoundError
 from service.log import app_logger
+
+with open('config/config.yaml') as stream:
+    config = yaml.safe_load(stream)
 
 
 class RecoResponse(BaseModel):
@@ -41,7 +45,9 @@ async def get_reco(
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
     k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
+    if model_name == 'test_model':
+        reco = list(range(k_recs))
+
     return RecoResponse(user_id=user_id, items=reco)
 
 
