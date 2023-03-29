@@ -1,10 +1,11 @@
 from typing import List
 import yaml
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, FastAPI, Request, Depends
 from pydantic import BaseModel
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import UserNotFoundError, NotAuthorizedError
 from service.log import app_logger
 
 with open('config/config.yaml') as stream:
@@ -17,6 +18,7 @@ class RecoResponse(BaseModel):
 
 
 router = APIRouter()
+bearer_scheme = HTTPBearer()
 
 
 @router.get(
@@ -36,10 +38,12 @@ async def get_reco(
     request: Request,
     model_name: str,
     user_id: int,
+    token: HTTPAuthorizationCredentials = Depends(bearer_scheme)
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    # Write your code here
+    if token.credentials != config['Service']['token']:
+        raise NotAuthorizedError()
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
