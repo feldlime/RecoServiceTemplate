@@ -1,0 +1,9 @@
+Service:
+  token: 'YUNHUSLUSUFCOHUY'
+  models: ['test_model']
+
+
+Models:
+  test_model:
+    n_recs: 10
+
