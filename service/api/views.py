@@ -5,7 +5,12 @@ from fastapi import APIRouter, FastAPI, Request, Depends
 from pydantic import BaseModel
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from service.api.exceptions import UserNotFoundError, NotAuthorizedError
+from service.api.exceptions import (
+    UserNotFoundError,
+    NotAuthorizedError,
+    ModelNotFoundError,
+)
+
 from service.log import app_logger
 
 with open('config/config.yaml') as stream:
@@ -45,7 +50,10 @@ async def get_reco(
     if token.credentials != config['Service']['token']:
         raise NotAuthorizedError()
 
-    if user_id > 10**9:
+    elif model_name not in config['Service']['models']:
+        raise ModelNotFoundError()
+
+    elif user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
     k_recs = request.app.state.k_recs
