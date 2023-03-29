@@ -10,7 +10,7 @@ from service.api.exceptions import (
     NotAuthorizedError,
     ModelNotFoundError,
 )
-
+from service.api.responses import responses
 from service.log import app_logger
 
 with open('config/config.yaml') as stream:
@@ -38,6 +38,7 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses=responses,
 )
 async def get_reco(
     request: Request,
@@ -48,10 +49,10 @@ async def get_reco(
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     if token.credentials != config['Service']['token']:
-        raise NotAuthorizedError()
+        raise NotAuthorizedError(error_message=f"Token {user_id} is incorrect")
 
     elif model_name not in config['Service']['models']:
-        raise ModelNotFoundError()
+        raise ModelNotFoundError(error_message=f"Model name {model_name} not found")
 
     elif user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
