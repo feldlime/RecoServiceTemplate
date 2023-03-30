@@ -1,7 +1,6 @@
 from http import HTTPStatus
-
 from starlette.testclient import TestClient
-
+from main import config
 from service.settings import ServiceConfig
 
 GET_RECO_PATH = "/reco/{model_name}/{user_id}"
@@ -54,6 +53,7 @@ def test_get_reco_with_invalid_token(
     assert response.status_code == HTTPStatus.FORBIDDEN
     assert response.json()["errors"][0]["error_key"] == "http_exception"
 
+
 def test_get_reco_without_token(
     client: TestClient,
 ) -> None:
@@ -74,8 +74,7 @@ def test_get_reco_with_unknown_model(
     with client:
         response = client.get(
             path,
-            headers={"Authorization": f"Bearer {config_service['token']}"},
+            headers={"Authorization": f"Bearer {config['token']}"},
         )
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json()["errors"][0]["error_key"] == "model_not_found"
-
