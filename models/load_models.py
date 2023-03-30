@@ -2,7 +2,6 @@ import pandas as pd
 import joblib
 import yaml
 
-from models.ann import Ann
 with open('config/config_models.yml') as stream:
     config = yaml.safe_load(stream)
 
