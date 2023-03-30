@@ -1,8 +1,15 @@
 UserKnn_model_conf:
     model: TFIDFRecommender()
-    save_reco_df_path: 'data/offline_recs_df/userknn_recs'
-    dataset_path: 'data/kion_train'
+    save_reco_df_path: 'data/offline_recs_df/userknn_TFIDF.dill'
+    dataset_path: 'data/kion_train/userknn_recs'
     N_recs: 10
+    online: False
+    blend_threshold: 3
+    n_folds: 3
+    unit: "D"
+    n_units: 4
+    periods: 2
+    dataset_path: 'data/kion_train'
 
 
 Popular_model_conf:
