@@ -9,7 +9,7 @@ from service.api.exceptions import ModelNotFoundError, UserNotFoundError
 from service.auth.authorization import JWTBearer
 from service.log import app_logger
 
-# y5
+
 with open('config/config_service.yml') as stream:
     config_service = yaml.safe_load(stream)['config']
 with open('config/config_models.yml') as stream:
@@ -53,8 +53,6 @@ async def get_reco(
     model_name: str,
     user_id: int,
 ) -> RecoResponse:
-
-    global reco
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     if user_id > 10 ** 9:
@@ -72,7 +70,7 @@ async def get_reco(
                 user_id,
                 config_model['UserKnn_model_conf']['N_recs'],
             )
-        # Offline
+        # Ofline
         else:
             userknn_reco_df = USERKNN['reco_df']
             reco = userknn_reco_df[userknn_reco_df.user_id == user_id]
