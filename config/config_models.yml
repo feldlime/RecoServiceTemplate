@@ -1,7 +1,7 @@
 UserKnn_model_conf:
     model: TFIDFRecommender()
-    save_reco_df_path: 'data/offline_recs_df/userknn_TFIDF.dill'
-    dataset_path: 'data/kion_train/userknn_recs'
+    save_reco_df_path: 'data/offline_recs_df/userknn_TFIDF'
+    weight_path: 'data/weights/userknn_TFIDF.dill'
     N_recs: 10
     online: False
     blend_threshold: 3
