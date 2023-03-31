@@ -1,5 +1,5 @@
 config:
     # Authorization
-    token: "DBSEBJIPQXJKYODN"
+    token: $API_TOKEN
     # Existing models
     models: ['popular_model', 'userknn_model', 'als_model', 'ann_model', 'svd_model', 'lightfm_model']
