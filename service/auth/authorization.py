@@ -1,7 +1,6 @@
-
 from http import HTTPStatus
-import yaml
 
+import yaml
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -27,10 +26,10 @@ class JWTBearer(HTTPBearer):
         if credentials:
             if not credentials.scheme == "Bearer":
                 raise HTTPException(status_code=HTTPStatus.FORBIDDEN,
-                                    detail="Invalid authentication scheme :( ")
+                                    detail="Invalid authentication")
             if not verify_jwt(credentials.credentials):
                 raise HTTPException(status_code=HTTPStatus.FORBIDDEN,
-                                    detail="Invalid token or it is expired :( ")
+                                    detail="Invalid token")
             return credentials.credentials
         raise HTTPException(status_code=HTTPStatus.FORBIDDEN,
-                            detail="Invalid authorization code :( ")
+                            detail="Invalid authorization")
