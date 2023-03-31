@@ -1,6 +1,7 @@
 import asyncio
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import Any, Dict
+
 import uvloop
 from fastapi import FastAPI
 
