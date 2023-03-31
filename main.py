@@ -1,11 +1,10 @@
 import os
 import uvicorn
+
 from service.api.app import create_app
 from service.settings import get_config
 
-from models.load_models import main
 
-main()
 config = get_config()
 app = create_app(config)
 
