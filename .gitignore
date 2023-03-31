@@ -2,17 +2,6 @@
 .vscode/
 .idea/
 
-# Data
-data
-notebooks/.idea
-notebooks/.ipynb_checkpoints
-ALS.ipynb
-ANN.ipynb
-LightFM.ipynb
-SVD.ipynb
-User_Knn.ipynb
-
-
 
 # for Mac/OSX
 .DS_Store
