@@ -37,12 +37,13 @@ async def get_reco(
 
     # Write your code here
 
+
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
-
-    k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
-    return RecoResponse(user_id=user_id, items=reco)
+    if model_name == "test_model":
+        k_recs = request.app.state.k_recs
+        reco = list(range(k_recs))
+        return RecoResponse(user_id=user_id, items=reco)
 
 
 def add_views(app: FastAPI) -> None:
