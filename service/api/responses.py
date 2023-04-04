@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
 from .exceptions import (
-    UserNotFoundError,
-    NotAuthorizedError,
     ModelNotFoundError,
+    NotAuthorizedError,
+    UserNotFoundError,
 )
 
 responses = {
