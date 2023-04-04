@@ -4,6 +4,7 @@ import yaml
 from fastapi import APIRouter, FastAPI, Request, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
+from service.config.responses import responses
 
 from service.api.exceptions import UserNotFoundError, NotAuthorizedError, \
     ModelNotFoundError
@@ -36,6 +37,7 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses=responses
 )
 async def get_reco(
     request: Request,
