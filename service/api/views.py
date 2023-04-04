@@ -48,10 +48,10 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    if token.credentials != config['Service']['token']:
+    if token.credentials != request.app.state.token:
         raise NotAuthorizedError(error_message=f"Token {user_id} is incorrect")
 
-    elif model_name not in config['Service']['models']:
+    elif model_name not in request.app.state.models:
         raise ModelNotFoundError(
             error_message=f"Model name {model_name} not found"
         )
@@ -62,6 +62,9 @@ async def get_reco(
     k_recs = request.app.state.k_recs
     if model_name == 'test_model':
         reco = list(range(k_recs))
+
+    elif model_name == 'userknn_model':
+        ...
 
     return RecoResponse(user_id=user_id, items=reco)
 

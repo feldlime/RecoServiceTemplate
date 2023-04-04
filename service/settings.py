@@ -23,6 +23,8 @@ class LogConfig(Config):
 class ServiceConfig(Config):
     service_name: str = "reco_service"
     k_recs: int = 10
+    token: str = 'YUNHUSLUSUFCOHUY'
+    models: list = ['test_model', 'userknn_model']
 
     log_config: LogConfig
 
