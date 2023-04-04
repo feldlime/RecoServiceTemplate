@@ -48,7 +48,21 @@ def test_get_reco_for_unauthorized_user(
     token_false = "557757567"
     path = GET_RECO_PATH.format(model_name="test_model", user_id=user_id)
     with client:
-        response = client.get(path, headers=
-        {'Authorization': f'Token {token_false}INVALID'})
+        response = client.get(
+            path, headers={'Authorization': f'Bearer {token_false}'})
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert response.json()["errors"][0]["error_key"] == "unauthorized"
+
+
+def test_get_reco_for_unknown_models(
+    client: TestClient,
+) -> None:
+    user_id = 4
+    false_model = "abc"
+    token = "12345678"
+    path = GET_RECO_PATH.format(model_name=false_model, user_id=user_id)
+    with client:
+        response = client.get(
+            path, headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json()["errors"][0]["error_key"] == "model not found"

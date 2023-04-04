@@ -1,3 +1,4 @@
 auth:
   token: "12345678"
-
+service:
+  models: ['test_model']
