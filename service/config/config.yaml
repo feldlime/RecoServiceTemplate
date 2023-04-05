@@ -1,14 +1,13 @@
-from implicit.nearest_neighbours import TFIDFRecommender
-
 test_model:
   n_recs: 10
 
 userknn_model:
   n_recs: 10
-  online_model: TFIDFRecommender()
-  offline_model: 'userknn_model.dill'
-  Online: True
+  online_mode: False
+  online: 'service/reco_models/userknn_model.dill'
+  offline: 'data/userknn_recos.csv'
 
 popular_model:
   n_recs: 10
-  recs: 'popular_recos.csv'
+  online: 'service/reco_models/popular_model.dill'
+  offline: 'data/popular_recos.csv'
