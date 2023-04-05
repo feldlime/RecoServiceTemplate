@@ -1,7 +1,0 @@
-Models:
-  test_model:
-    n_recs: 10
-
-  userknn_model:
-    n_recs: 10
-
