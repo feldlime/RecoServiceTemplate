@@ -3,7 +3,7 @@ test_model:
 
 userknn_model:
   n_recs: 10
-  online_mode: False
+  online_mode: True
   online: 'service/reco_models/userknn_model.dill'
   offline: 'data/userknn_recos.csv'
 
@@ -11,3 +11,7 @@ popular_model:
   n_recs: 10
   online: 'service/reco_models/popular_model.dill'
   offline: 'data/popular_recos.csv'
+
+lightfm_model:
+  online: 'service/data/lightfm_model.dill'
+

@@ -137,6 +137,21 @@ files = [
 ]
 
 [[package]]
+name = "dill"
+version = "0.3.6"
+description = "serialize all of python"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "dill-0.3.6-py3-none-any.whl", hash = "sha256:a07ffd2351b8c678dfc4a856a3005f8067aea51d6ba6c700796a4d9e280f39f0"},
+    {file = "dill-0.3.6.tar.gz", hash = "sha256:e5db55f3687856d8fbdab002ed78544e1c4559a130302693d839dfe8f93f2373"},
+]
+
+[package.extras]
+graph = ["objgraph (>=1.7.2)"]
+
+[[package]]
 name = "fastapi"
 version = "0.65.3"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
@@ -1228,4 +1243,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = " <3.12,>=3.8"
-content-hash = "752f4866a60284123053e82c068a42fe3c174845ced12e4574d3734578437ccd"
+content-hash = "1d4a9fdd8d3d6e5ddec192d0f490d37e07c45bca83a6eff981254516ac3b9c9c"
