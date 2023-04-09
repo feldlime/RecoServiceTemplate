@@ -1,5 +1,6 @@
 from typing import List
 
+import pandas as pd
 import yaml
 from fastapi import APIRouter, FastAPI, Request, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -9,10 +10,13 @@ from service.config.responses import responses
 from service.api.exceptions import UserNotFoundError, NotAuthorizedError, \
     ModelNotFoundError
 from service.log import app_logger
+from userknn import UserKnn
 
 config_file = "config/config.yaml"
 with open(config_file) as f:
     config = yaml.load(f, Loader=yaml.Loader)
+
+userknn_recos_off = pd.read_csv('service/pretrained_models/my_datas.csv')
 
 
 class RecoResponse(BaseModel):
@@ -57,12 +61,24 @@ async def get_reco(
         raise ModelNotFoundError(error_message=f"Model: "
                                                f"{model_name} not found")
 
-    if user_id > 10 ** 9:
+    if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
-    k_recs = request.app.state.k_recs
-    if model_name == "test_model":
+
+    if model_name == "userknn_model":
+        k_recs = request.app.state.k_recs
+        reco = eval(userknn_recos_off.loc[user_id, "item_id"])
+
+    elif model_name == "test_model":
+        k_recs = request.app.state.k_recs
         reco = list(range(k_recs))
-        return RecoResponse(user_id=user_id, items=reco)
+
+    elif model_name == "popular_model":
+        k_recs = request.app.state.k_recs
+        reco = list(range(k_recs))
+
+    else:
+        raise ModelNotFoundError(error_message=f"Model {model_name} not found")
+    return RecoResponse(user_id=user_id, items=reco)
 
 
 def add_views(app: FastAPI) -> None:
