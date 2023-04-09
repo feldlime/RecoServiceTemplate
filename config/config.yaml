@@ -1,4 +1,4 @@
 auth:
   token: "12345678"
 service:
-  models: ['test_model', 'userknn_model']
+  models: ['test_model', 'userknn_model', 'popular_model']

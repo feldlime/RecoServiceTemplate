@@ -18,6 +18,7 @@ with open(config_file) as f:
 
 userknn_recos_off = pd.read_csv('service/pretrained_models/my_datas.csv')
 
+popular_model_recs = [15297, 10440, 4151, 13865, 9728, 3734, 12192, 142, 2657, 4880]
 
 class RecoResponse(BaseModel):
     user_id: int
@@ -74,7 +75,7 @@ async def get_reco(
 
     elif model_name == "popular_model":
         k_recs = request.app.state.k_recs
-        reco = list(range(k_recs))
+        reco = popular_model_recs
 
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
