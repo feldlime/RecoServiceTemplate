@@ -2,6 +2,12 @@
 
 ## Подготовка
 
+## Установить CloudFlare
+```bash
+brew install cloudflared
+cloudflared tunnel --url http://localhost:8000/
+```
+
 ### Python
 
 В данном шаблоне используется Python3.8, однако вы можете использовать более свежие версии, если хотите. 
