@@ -1,9 +1,20 @@
-from typing import List
+from typing import List, Dict, Any
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import (
+    APIRouter,
+    FastAPI,
+    Request,
+    HTTPException,
+    Depends,
+)
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import (
+    UserNotFoundError,
+    ModelNotFoundError,
+    ModelNotImplementedError,
+)
 from service.log import app_logger
 
 
@@ -12,7 +23,11 @@ class RecoResponse(BaseModel):
     items: List[int]
 
 
+models: Dict[str, Any] = {"model_1": 0, "model_2": 0}
+
+
 router = APIRouter()
+auth_scheme = HTTPBearer(auto_error=False)
 
 
 @router.get(
@@ -27,21 +42,42 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={
+        200: {"description": "Return recommendations for users."},
+        401: {"description": "You are not authenticated"},
+        404: {"description": "The Model or User was not found"},
+        501: {"description": "The Model not implemented"},
+    },
 )
 async def get_reco(
     request: Request,
     model_name: str,
     user_id: int,
+    token: HTTPAuthorizationCredentials = Depends(auth_scheme),
 ) -> RecoResponse:
-    app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
+    if not token or token.credentials != request.app.state.api_key:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-    # Write your code here
+    app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
-    k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
+    if model_name not in models:
+        raise ModelNotFoundError(error_message=f"Model {model_name} not found")
+
+    if model_name == "model_1":
+        k_recs = request.app.state.k_recs
+        reco = list(range(k_recs))
+    else:
+        raise ModelNotImplementedError(
+            error_message=f"Model {model_name} not implemented"
+        )
+
     return RecoResponse(user_id=user_id, items=reco)
 
 
