@@ -49,3 +49,5 @@ build-backend = "poetry.masonry.api"
 
 #poetry lock --no-update
 # make setup
+#
+# ARCHFLAGS="-arch arm64" pip install lightfm --compile --no-cache-dir

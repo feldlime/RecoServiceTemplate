@@ -49,7 +49,7 @@ async def get_api_key(
         return api_key_header
     if token is not None and token.credentials == config_env["API_KEY"]:
         return token.credentials
-    sentry_sdk.capture_exception(error=Exception('Token Error'))
+    sentry_sdk.capture_exception(error='Token Error')
     raise CredentialError()
 
 
