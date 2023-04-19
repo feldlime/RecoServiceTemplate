@@ -75,20 +75,21 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    if user_id > 10 ** 7:
+    if user_id > 10 ** 6:
         sentry_sdk.capture_exception(
-            error=Exception(f"User {user_id} not found"))
+            error=f"User {user_id} not found")
         raise UserNotFoundError(
-            error_message=Exception(f"User {user_id} not found"))
+            error_message=f"User {user_id} not found")
 
     if user_id % 666 == 0:
         sentry_sdk.capture_exception(
-            error=Exception(f"User id {user_id} is divided entirely into 666"))
-        raise UserNotFoundError(error_message=f"User {user_id} not found")
+            error=f"User id {user_id} is divided entirely into 666")
+        raise UserNotFoundError(
+            error_message=f"User id {user_id} is divided entirely into 666")
 
     if model_name not in models_zoo.keys():
         sentry_sdk.capture_exception(
-            error=Exception(f"Model {model_name} not found"))
+            error=f"Model {model_name} not found")
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 
     k_recs = request.app.state.k_recs
