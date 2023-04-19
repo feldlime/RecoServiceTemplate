@@ -11,7 +11,7 @@ from service.log import app_logger
 
 from .config import config_env
 from .models import NotFoundError, RecoResponse, UnauthorizedError
-from .models_zoo import DumpModel, OnlineModel
+from .models_zoo import DumpModel, OnlineModel, Popular
 
 import sentry_sdk
 
@@ -30,11 +30,13 @@ sentry_sdk.init(
 try:
     models_zoo = {
         "model_1": DumpModel(),
+        "popular" : Popular(),
         "LightFM": OnlineModel(path_to_model='./data/lightfm.pickle')
     }
 except FileNotFoundError:
     models_zoo = {
         "model_1": DumpModel(),
+        "popular": Popular(),
     }
 
 
