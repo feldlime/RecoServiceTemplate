@@ -10,7 +10,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.10.0"
 fastapi = "^0.65.1"
 pydantic = "^1.8.2"
 gunicorn = "^20.1.0"
@@ -18,12 +18,20 @@ uvloop = "^0.15.2"
 uvicorn = "^0.14.0"
 orjson = "^3.7.7"
 starlette = "^0.14.2"
+cython = "^0.29.32"
+scipy = "^1.1.3"
+numpy = "^1.23.5"
+dill = "^0.3.6"
+pandas = "^1.5.2"
+nmslib = "^2.1.1"
+gdown = "^4.7.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
 requests = "2.25.1"
 mypy = "^0.812"
 isort = "^5.8.0"
+black = "^22.12.0"
 bandit = "^1.7.0"
 flake8 = "^3.9.2"
 pylint = "~2.8.3"

@@ -19,9 +19,15 @@ CONTAINER_NAME := reco_service
 .venv:
 	poetry install --no-root
 	poetry check
+	# Загрузка implicit и lightfm. Через pip, отдельно от poetry
+#	. .venv/bin/activate
+	pip install implicit==0.4.4 lightfm==1.16
 
 setup: .venv
 
+load_models:
+	# Загрузка моделей "make load_models" с Google Drive (бывший "make script")
+	./load_models_from_google_drive.sh
 
 # Clean
 
@@ -36,7 +42,10 @@ clean:
 isort_fix: .venv
 	isort $(PROJECT) $(TESTS)
 
-format: isort_fix
+black: .venv
+	black $(PROJECT) $(TESTS) -l 120
+
+format: isort_fix black
 
 
 # Lint
@@ -51,7 +60,7 @@ mypy: .venv
 	mypy $(PROJECT) $(TESTS)
 
 pylint: .venv
-	pylint $(PROJECT) $(TESTS)
+	pylint $(PROJECT) $(TESTS) --disable=R0912
 
 lint: isort flake mypy pylint
 
@@ -70,7 +79,7 @@ build:
 	docker build . -t $(IMAGE_NAME)
 
 run: build
-	docker run -p 8080:8080 --name $(CONTAINER_NAME) $(IMAGE_NAME)
+	docker run -p 80:80 --name $(CONTAINER_NAME) $(IMAGE_NAME)
 
 # All
 

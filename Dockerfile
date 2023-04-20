@@ -1,29 +1,43 @@
-FROM python:3.8-buster as build
+FROM python:3.8 as build
 
-COPY . .
+ENV APP_DIR /usr/src/app
+WORKDIR $APP_DIR
+
+COPY . $APP_DIR
 
 RUN pip install -U --no-cache-dir pip poetry setuptools wheel && \
+	poetry add implicit==0.4.4 lightfm==1.16 --lock && \
     poetry build -f wheel && \
     poetry export -f requirements.txt -o requirements.txt --without-hashes && \
     pip wheel -w dist -r requirements.txt
 
 
-FROM python:3.8-slim-buster as runtime
+FROM python:3.8 as runtime
 
-WORKDIR /usr/src/app
+ENV APP_DIR /usr/src/app
+WORKDIR $APP_DIR
+
+COPY . $APP_DIR
 
 ENV PYTHONOPTIMIZE true
 ENV DEBIAN_FRONTEND noninteractive
+ENV PYTHONUTF8 1
 
 # setup timezone
 ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY --from=build dist dist
-COPY --from=build main.py gunicorn.config.py ./
+COPY --from=build $APP_DIR/dist $APP_DIR/dist
+#COPY --from=build main.py gunicorn.config.py ./
 
+RUN pip install -U --no-cache-dir pip $APP_DIR/dist/*.whl && \
+    rm -rf $APP_DIR/dist
 
-RUN pip install -U --no-cache-dir pip dist/*.whl && \
-    rm -rf dist
+# OpenMP (Multi Processing)
+ENV OMP_NUM_THREADS 12
 
-CMD ["gunicorn", "main:app", "-c", "gunicorn.config.py"]
+# NMSLIB
+# RUN pip install --no-binary :all: nmslib
+
+#CMD ["gunicorn", "main:app", "-c", "gunicorn.config.py"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
