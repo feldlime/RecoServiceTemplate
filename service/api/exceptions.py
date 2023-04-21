@@ -48,3 +48,14 @@ class ModelNotFoundError(AppException):
         error_loc: tp.Optional[tp.Sequence[str]] = None,
     ):
         super().__init__(status_code, error_key, error_message, error_loc)
+
+
+class Error666(AppException):
+    def __init__(
+        self,
+        status_code: int = HTTPStatus.NOT_FOUND,
+        error_key: str = "wrong user_id",
+        error_message: str = "user_id is wrong",
+        error_loc: tp.Optional[tp.Sequence[str]] = None,
+    ):
+        super().__init__(status_code, error_key, error_message, error_loc)

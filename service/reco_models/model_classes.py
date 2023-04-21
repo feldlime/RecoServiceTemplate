@@ -42,13 +42,13 @@ class Popular:
             )
 
 
-class LightFM:
-    model_loaded: bool = False
-    model: Optional[object] = None
-
-    @classmethod
-    def load_model(cls):
-        if not cls.model_loaded:
-            cls.model_loaded = True
-            with open(config['lightfm_model']['online'], 'rb') as f:
-                cls.model = dill.load(f)
+# class LightFM:
+#     model_loaded: bool = False
+#     model: Optional[object] = None
+#
+#     @classmethod
+#     def load_model(cls):
+#         if not cls.model_loaded:
+#             cls.model_loaded = True
+#             with open(config['lightfm_model']['online'], 'rb') as f:
+#                 cls.model = dill.load(f)

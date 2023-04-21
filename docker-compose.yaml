@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:5.0-alpine
+
+  postgres:
+    image: postgres:10
+    environment:
+      POSTGRES_USER: sentry
+      POSTGRES_PASSWORD: sentry
+      POSTGRES_DB: sentry
+
+  smtp:
+    image: tianon/exim4
+    ports:
+      - 1025:25
+
+  sentry:
+    image: sentry:latest
+    depends_on:
+      - redis
+      - postgres
+      - smtp
+    environment:
+      SENTRY_SECRET_KEY: 'some_secret_key'
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_DB_NAME: sentry
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis
+      SENTRY_EMAIL_HOST: smtp
+      SENTRY_EMAIL_PORT: 25
+      SENTRY_SERVER_EMAIL: 'sentry@example.com'
+    ports:
+      - 9000:9000

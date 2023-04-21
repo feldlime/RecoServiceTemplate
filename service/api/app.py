@@ -2,6 +2,7 @@ import asyncio
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import Any, Dict
 
+import sentry_sdk
 import uvloop
 from fastapi import FastAPI
 
@@ -13,6 +14,10 @@ from .views import add_views
 
 __all__ = ("create_app",)
 
+sentry_sdk.init(
+    dsn="https://0b78febaac224b32b28674413c94a0b0@o4505051663630336.ingest.sentry.io/4505051666251776",
+    traces_sample_rate=1.0,
+)
 
 def setup_asyncio(thread_name_prefix: str) -> None:
     uvloop.install()

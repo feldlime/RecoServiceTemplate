@@ -9,10 +9,11 @@ from service.api.exceptions import (
     ModelNotFoundError,
     NotAuthorizedError,
     UserNotFoundError,
+    Error666,
 )
 from service.api.responses import responses
 from service.log import app_logger
-from service.reco_models.model_classes import Popular, UserKNN, LightFM
+from service.reco_models.model_classes import Popular, UserKNN  # LightFM
 
 # config_file = 'service/config/config.yaml'
 with open('service/config/config.yaml') as stream:
@@ -29,7 +30,12 @@ bearer_scheme = HTTPBearer()
 
 UserKNN.load_model()
 Popular.load_model()
-LightFM.load_model()
+# LightFM.load_model()
+
+
+@router.get("/sentry-debug")
+async def trigger_error():
+    division_by_zero = 1 / 0
 
 
 @router.get(
@@ -64,11 +70,13 @@ async def get_reco(
         )
     elif user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
+    elif user_id % 666 == 0:
+        raise Error666(error_message=f"User {user_id} is wrong")
 
     # models
     k_recs = request.app.state.k_recs
     if model_name == 'test_model':
-        reco = list(range(config['test_model']['n_recs']))
+        reco = list(range(k_recs))
 
     elif model_name == 'userknn_model':
         # Online
@@ -97,13 +105,13 @@ async def get_reco(
                     reco.append(popular_reco[i])
                 i += 1
 
-    elif model_name == 'lightfm_model':
-        # Online
-        lightfm_model = LightFM.model
-        reco = lightfm_model.recommend(user_id, k_recs)
-
-        if not reco:
-            reco = list(Popular.recs.item_id)
+    # elif model_name == 'lightfm_model':
+    #     # Online
+    #     lightfm_model = LightFM.model
+    #     reco = lightfm_model.recommend(user_id, k_recs)
+    #
+    #     if not reco:
+    #         reco = list(Popular.recs.item_id)
     return RecoResponse(user_id=user_id, items=reco)
 
 
