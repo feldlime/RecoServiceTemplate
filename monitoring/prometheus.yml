@@ -1,0 +1,17 @@
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: "recservice"
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ["host.docker.internal:8000"]
+
+  - job_name: 'node_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+

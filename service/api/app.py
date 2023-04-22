@@ -1,5 +1,7 @@
 import asyncio
 from concurrent.futures.thread import ThreadPoolExecutor
+from prometheus_fastapi_instrumentator import Instrumentator
+
 from typing import Any, Dict
 
 import sentry_sdk
@@ -42,6 +44,8 @@ def create_app(config: ServiceConfig) -> FastAPI:
     app.state.k_recs = config.k_recs
     app.state.token = config.token
     app.state.models = config.models
+
+    Instrumentator().instrument(app).expose(app)
 
     add_views(app)
     add_middlewares(app)
