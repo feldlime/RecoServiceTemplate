@@ -11,3 +11,4 @@ isort
 pylint==2.8.3
 mypy
 flake8
+scipy==0.16
