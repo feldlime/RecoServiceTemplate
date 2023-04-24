@@ -1,12 +1,11 @@
 import asyncio
 from concurrent.futures.thread import ThreadPoolExecutor
-from prometheus_fastapi_instrumentator import Instrumentator
-
 from typing import Any, Dict
 
 import sentry_sdk
 import uvloop
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from ..log import app_logger, setup_logging
 from ..settings import ServiceConfig

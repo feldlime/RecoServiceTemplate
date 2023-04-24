@@ -6,10 +6,10 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
 from service.api.exceptions import (
+    Error666,
     ModelNotFoundError,
     NotAuthorizedError,
     UserNotFoundError,
-    Error666,
 )
 from service.api.responses import responses
 from service.log import app_logger

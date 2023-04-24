@@ -3,15 +3,10 @@ pydantic==1.8.2
 uvicorn==0.14.0
 orjson==3.7.7
 starlette==0.14.2
-python-multipart==0.0.5
-passlib[bcrypt]
-python-jose[cryptography]
-python-dotenv==0.21.0
 pandas==1.5.1
 pyyaml==6.0
 dill==0.3.6
 rectools==0.3.0
-prometheus_fastapi_instrumentator
 pytest
 isort
 pylint==2.8.3
