@@ -12,8 +12,3 @@ isort
 pylint==2.8.3
 mypy
 flake8
-cupy-cuda112
-Cython
-numba
-pycuda
-scikit-cuda
