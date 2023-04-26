@@ -1,5 +1,5 @@
 ## Py-Spy
-Запустил цикл в 1000 итераций, который отправлял запросы на каждую "ручку", скрины тут.
+Запустил цикл в 1000 итераций, который отправлял запросы на каждую "ручку", скрины [тут](https://github.com/robertzaraev/RecoServiceTemplate/tree/HW_1/py-spy).
 1. Health
 2. Popular
 3. kNN+bm25 
@@ -11,15 +11,15 @@
 2. Модель не найдена
 3. Слишком большой userId
 
-Скрины тут.
+Скрины [тут](https://github.com/robertzaraev/RecoServiceTemplate/tree/HW_1/sentry_pic).
 
 ## MLFlow
-У меня на компьютере не ставился rectools вообще, понижал версию питона - все равно ему что-то не нравится. Док-ва тут и тут. Поэтому я использовал ресурсы DataBricks для того, чтобы трекать эксперименты.
-1. Три метрики лучшей модели - map@10, precision@10, recall@10.
+У меня на компьютере не ставился rectools вообще, понижал версию питона - все равно ему что-то не нравится. Док-ва [тут](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/rectools1.png) и [тут](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/rectools2.png). Поэтому я использовал ресурсы [GoogleColab](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/knnfinal.ipynb) и [DataBricks](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/metrics/Вся%20информация%20о%20эксперименте.png) для того, чтобы трекать эксперименты.
+1. Три метрики лучшей модели - [map@10](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/metrics/map%4010.png), [precision@10](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/metrics/precision.png), [recall@10](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/metrics/recall.png).
 2. Продолжительная метрика: я использовал kNN, поэтому изменение метрик считал по мере увеличения соседей.
 3. Техническая метрика: 
-- считал вес каждой модели, по мере увеличения кол-ва соседей
-- считал время обучения
-- считал время затрачиваемое на рекомендации
-4. В конце ноутбука представлены примеры экспериментов + скачал лучшую модель, ноутбук тут.
-5. Я развернул локально MLFlow, но локально затрекать эксперименты не смог из-за выше указанной причины. Прикладываю docker-compose и скрин
+- считал [вес](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/metrics/weight_mb.png) каждой модели, по мере увеличения кол-ва соседей
+- считал [время обучения](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/metrics/learning_time.png)
+- считал [время затрачиваемое на рекомендации](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/metrics/recos_time.png)
+4. В конце ноутбука представлены примеры экспериментов + скачал лучшую модель, ноутбук [тут](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/knnfinal.ipynb).
+5. Я развернул локально MLFlow, но локально затрекать эксперименты не смог из-за выше указанной причины. Прикладываю docker-compose и [скрин](https://github.com/robertzaraev/RecoServiceTemplate/blob/HW_1/mlflow/docker-localhost.png).
