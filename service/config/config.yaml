@@ -9,3 +9,6 @@ popular_model:
 
 lightfm_model:
   online: 'data/lightfm_model.dill'
+
+popular_by_age_model:
+  offline: 'data/popular_by_age_model.csv'

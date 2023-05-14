@@ -42,6 +42,20 @@ class Popular:
             )
 
 
+class PopularByAge:
+    model_loaded: bool = False
+    model: Optional[object] = None
+    recs: Optional[pd.DataFrame] = None
+
+    @classmethod
+    def load_model(cls):
+        if not cls.model_loaded:
+            cls.model_loaded = True
+            cls.recs = pd.read_csv(
+                config['popular_by_age_model']['offline'],
+                encoding='utf-8',
+            )
+
 # class LightFM:
 #     model_loaded: bool = False
 #     model: Optional[object] = None
