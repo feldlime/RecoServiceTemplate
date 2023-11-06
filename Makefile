@@ -36,13 +36,20 @@ clean:
 isort_fix: .venv
 	isort $(PROJECT) $(TESTS)
 
-format: isort_fix
+
+black_fix:
+	black $(PROJECT) $(TESTS)
+
+format: isort_fix black_fix
 
 
 # Lint
 
 isort: .venv
 	isort --check $(PROJECT) $(TESTS)
+
+.black:
+	black --check --diff $(PROJECT) $(TESTS)
 
 flake: .venv
 	flake8 $(PROJECT) $(TESTS)
