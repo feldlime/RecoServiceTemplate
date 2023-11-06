@@ -29,6 +29,10 @@ bandit = "^1.7.0"
 flake8 = "^3.9.2"
 pylint = "~2.8.3"
 
+[tool.black]
+line-length = 120
+target-version = ["py38", "py39", "py310"]
+
 [build-system]
 requires = ["poetry>=1.0.5"]
 build-backend = "poetry.masonry.api"
