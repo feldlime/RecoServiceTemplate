@@ -12,7 +12,7 @@ from service.models import Error
 class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, o: tp.Any) -> tp.Any:
         if isinstance(o, BaseModel):
-            return o.dict()
+            return o.model_dump()
         try:
             orjson.dumps(o)
         except TypeError:
