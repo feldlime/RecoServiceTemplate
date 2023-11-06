@@ -3,7 +3,7 @@
 # A comma-separated list of package or module names from where C extensions
 # may be loaded. Extensions are loading into the active Python interpreter
 # and may run arbitrary code.
-extension-pkg-whitelist=orjson,
+extension-pkg-whitelist=orjson
 
 # Add files or directories to the blacklist.
 # They should be base names, not paths.
@@ -53,103 +53,25 @@ unsafe-load-any-extension=no
 confidence=
 
 # Disable the message, report, category or checker with the given id(s).
-disable=print-statement,
-        parameter-unpacking,
-        unpacking-in-except,
-        old-raise-syntax,
-        backtick,
-        long-suffix,
-        old-ne-operator,
-        old-octal-literal,
-        import-star-module-level,
-        non-ascii-bytes-literal,
-        raw-checker-failed,
+disable=arguments-differ,
         bad-inline-option,
-        locally-disabled,
-        file-ignored,
-        suppressed-message,
-        useless-suppression,
         deprecated-pragma,
-        use-symbolic-message-instead,
-        apply-builtin,
-        basestring-builtin,
-        buffer-builtin,
-        cmp-builtin,
-        coerce-builtin,
-        execfile-builtin,
-        file-builtin,
-        long-builtin,
-        raw_input-builtin,
-        reduce-builtin,
-        standarderror-builtin,
-        unicode-builtin,
-        xrange-builtin,
-        coerce-method,
-        delslice-method,
-        getslice-method,
-        setslice-method,
-        no-absolute-import,
-        old-division,
-        dict-iter-method,
-        dict-view-method,
-        next-method-called,
-        metaclass-assignment,
-        indexing-exception,
-        raising-string,
-        reload-builtin,
-        oct-method,
-        hex-method,
-        nonzero-method,
-        cmp-method,
-        input-builtin,
-        round-builtin,
-        intern-builtin,
-        unichr-builtin,
-        map-builtin-not-iterating,
-        zip-builtin-not-iterating,
-        range-builtin-not-iterating,
-        filter-builtin-not-iterating,
-        using-cmp-argument,
-        eq-without-hash,
-        div-method,
-        idiv-method,
-        rdiv-method,
-        exception-message-attribute,
-        invalid-str-codec,
-        sys-max-int,
-        bad-python3-import,
-        deprecated-string-function,
-        deprecated-str-translate-call,
-        deprecated-itertools-function,
-        deprecated-types-field,
-        next-method-defined,
-        dict-items-not-iterating,
-        dict-keys-not-iterating,
-        dict-values-not-iterating,
-        deprecated-operator-function,
-        deprecated-urllib-function,
-        xreadlines-attribute,
-        deprecated-sys-function,
-        exception-escape,
-        comprehension-escape,
-        missing-module-docstring,
-        missing-function-docstring,
-        missing-class-docstring,
-        invalid-name,
-        invalid-envvar-default,
-        unused-argument,
-        no-self-use,
-        arguments-differ,
-        no-member,
-        too-many-ancestors,
-        logging-fstring-interpolation,
-        too-many-locals,
-        raise-missing-from,
-        consider-using-with,
-        no-name-in-module,
         duplicate-code,
-
-
+        file-ignored,
+        invalid-envvar-default,
+        invalid-name,
+        locally-disabled,
+        logging-fstring-interpolation,
+        missing-class-docstring,
+        missing-function-docstring,
+        missing-module-docstring,
+        no-member,
+        raise-missing-from,
+        raw-checker-failed,
+        suppressed-message,
+        unused-argument,
+        use-implicit-booleaness-not-comparison,
+        use-symbolic-message-instead,
 
 # Enable the message, report, category or checker with the given id(s).
 # You can either give multiple identifier separated by comma (,) or
@@ -215,10 +137,6 @@ max-line-length=120
 
 # Maximum number of lines in a module.
 max-module-lines=1000
-
-# List of optional constructs for which whitespace checking is disabled.
-no-space-check=trailing-comma,
-               dict-separator
 
 # Allow the body of a class to be on the same line as the declaration
 # if body contains single statement.
@@ -312,9 +230,6 @@ method-naming-style=snake_case
 # Overrides method-naming-style.
 # method-rgx=
 
-# Naming hint for argument names.
-argument-name-hint=[a-z_][a-z0-9_]{2,15}$
-
 # Naming style matching correct module names.
 module-naming-style=snake_case
 
@@ -338,8 +253,6 @@ property-classes=abc.abstractproperty
 # Naming style matching correct variable names.
 variable-naming-style=snake_case
 
-# Naming hint for variable names.
-variable-name-hint=[a-z_][a-z0-9_]{2,15}$
 
 # Regular expression matching correct variable names.
 # Overrides variable-naming-style.
@@ -483,7 +396,7 @@ ignore-comments=yes
 ignore-docstrings=yes
 
 # Ignore imports when computing similarities.
-ignore-imports=yes
+ignore-imports=no
 
 # Minimum lines number of a similarity.
 min-similarity-lines=4
@@ -526,25 +439,25 @@ valid-metaclass-classmethod-first-arg=cls
 [DESIGN]
 
 # Maximum number of arguments for function / method.
-max-args=11
+max-args=15
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=7
+max-attributes=12
 
 # Maximum number of boolean expressions in an if statement (see R0916).
-max-bool-expr=4
+max-bool-expr=2
 
 # Maximum number of branch for function / method body.
-max-branches=8
+max-branches=9
 
 # Maximum number of locals for function / method body.
-max-locals=15
+max-locals=22
 
 # Maximum number of parents for a class (see R0901).
 max-parents=10
 
 # Maximum number of public methods for a class (see R0904).
-max-public-methods=20
+max-public-methods=22
 
 # Maximum number of return / yield for function / method body.
 max-returns=5
@@ -601,5 +514,5 @@ preferred-modules=
 
 # Exceptions that will emit a warning when being caught.
 # Defaults to "BaseException, Exception".
-overgeneral-exceptions=BaseException,
-                       Exception,
+overgeneral-exceptions=builtins.BaseException,
+                       builtins.Exception,
