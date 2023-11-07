@@ -1,13 +1,5 @@
 VENV := .venv
 
-ifeq ($(OS),Windows_NT)
-   BIN=$(VENV)/Scripts
-else
-   BIN=$(VENV)/bin
-endif
-
-export PATH := $(BIN):$(PATH)
-
 PROJECT := service
 TESTS := tests
 
@@ -34,24 +26,31 @@ clean:
 # Format
 
 isort_fix: .venv
-	isort $(PROJECT) $(TESTS)
+	poetry run isort $(PROJECT) $(TESTS)
 
-format: isort_fix
+
+black_fix:
+	poetry run black $(PROJECT) $(TESTS)
+
+format: isort_fix black_fix
 
 
 # Lint
 
 isort: .venv
-	isort --check $(PROJECT) $(TESTS)
+	poetry run isort --check $(PROJECT) $(TESTS)
+
+.black:
+	poetry run black --check --diff $(PROJECT) $(TESTS)
 
 flake: .venv
-	flake8 $(PROJECT) $(TESTS)
+	poetry run flake8 $(PROJECT) $(TESTS)
 
 mypy: .venv
-	mypy $(PROJECT) $(TESTS)
+	poetry run mypy $(PROJECT) $(TESTS)
 
 pylint: .venv
-	pylint $(PROJECT) $(TESTS)
+	poetry run pylint $(PROJECT) $(TESTS)
 
 lint: isort flake mypy pylint
 
@@ -59,7 +58,7 @@ lint: isort flake mypy pylint
 # Test
 
 .pytest:
-	pytest
+	poetry run pytest $(TESTS)
 
 test: .venv .pytest
 

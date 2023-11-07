@@ -1,23 +1,14 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Config(BaseSettings):
-
-    class Config:
-        case_sensitive = False
+    model_config = SettingsConfigDict(case_sensitive=False)
 
 
 class LogConfig(Config):
+    model_config = SettingsConfigDict(case_sensitive=False, env_prefix="log_")
     level: str = "INFO"
     datetime_format: str = "%Y-%m-%d %H:%M:%S"
-
-    class Config:
-        case_sensitive = False
-        fields = {
-            "level": {
-                "env": ["log_level"]
-            },
-        }
 
 
 class ServiceConfig(Config):
