@@ -872,7 +872,7 @@ typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 name = "pydantic-settings"
 version = "2.0.3"
 description = "Settings management using Pydantic"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -969,7 +969,7 @@ testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "no
 name = "python-dotenv"
 version = "1.0.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
@@ -1280,4 +1280,4 @@ test = ["Cython (>=0.29.36,<0.30.0)", "aiohttp (==3.9.0b0)", "aiohttp (>=3.8.1)"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "397fc6fe120dd14c52416063df99c6d0f42813b3ccad2aacbb10ac196d572f7d"
+content-hash = "add0a32ac2cde7c15ee5132b2b1ea1216dab96d9a3d01238822ff4b94e7800a5"
