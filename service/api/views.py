@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserNotFoundError
 from service.api.keys import API_KEYS
-from service.api.recomendations import popular_10
+from service.api.recomendations import get_popular
 from service.log import app_logger
 
 
@@ -56,7 +56,7 @@ async def get_reco(
     if model_name is ModelName.range:
         reco = list(range(k_recs))
     elif model_name is ModelName.popular:
-        reco = popular_10
+        reco = get_popular(k_recs)
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 

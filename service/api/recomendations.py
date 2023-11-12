@@ -15,6 +15,3 @@ def get_popular(k_recs: int = 10):
     popularity.sort_values(["views", "total_dur"], ascending=False, inplace=True)
     popular = popularity.head(k_recs).index.tolist()
     return popular
-
-
-popular_10 = get_popular(10)

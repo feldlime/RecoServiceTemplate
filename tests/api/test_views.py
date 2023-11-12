@@ -2,11 +2,12 @@ from http import HTTPStatus
 
 from starlette.testclient import TestClient
 
+from service.api.keys import API_KEYS
 from service.settings import ServiceConfig
 
+API_KEY = API_KEYS[0]
 GET_RECO_PATH = "/reco/{model_name}/{user_id}"
-MODEL_NAMES = ["range"]
-API_KEY = "Bearer abc"
+MODEL_NAMES = ["range", "popular"]
 
 
 def test_health(
