@@ -1,5 +1,6 @@
 import os
 from http import HTTPStatus
+from httpx import Headers
 
 from starlette.testclient import TestClient
 
@@ -22,7 +23,8 @@ def test_get_reco_success(
 ) -> None:
     user_id = 123
     path = GET_RECO_PATH.format(model_name="range_test", user_id=user_id)
-    client.headers = {"Authorization": f"Bearer {os.getenv('API_KEY')}"}
+    client.headers = Headers(
+        {"Authorization": f"Bearer {os.getenv('API_KEY')}"})
     with client:
         response = client.get(path)
     assert response.status_code == HTTPStatus.OK
@@ -37,7 +39,8 @@ def test_get_reco_for_unknown_user(
 ) -> None:
     user_id = 10**10
     path = GET_RECO_PATH.format(model_name="range_test", user_id=user_id)
-    client.headers = {"Authorization": f"Bearer {os.getenv('API_KEY')}"}
+    client.headers = Headers(
+        {"Authorization": f"Bearer {os.getenv('API_KEY')}"})
     with client:
         response = client.get(path)
     assert response.status_code == HTTPStatus.NOT_FOUND
@@ -49,7 +52,8 @@ def test_get_reco_for_unknown_model(
 ) -> None:
     user_id = 123
     path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
-    client.headers = {"Authorization": f"Bearer {os.getenv('API_KEY')}"}
+    client.headers = Headers(
+        {"Authorization": f"Bearer {os.getenv('API_KEY')}"})
     with client:
         response = client.get(path)
     assert response.status_code == HTTPStatus.NOT_FOUND
@@ -62,7 +66,8 @@ def test_get_reco_auth(
 ) -> None:
     user_id = 123
     path = GET_RECO_PATH.format(model_name="range_test", user_id=user_id)
-    client.headers = {"Authorization": "Bearer 123456"}
+    client.headers = Headers(
+        {"Authorization": f"Bearer 123456789"})
     with client:
         response = client.get(path)
 
