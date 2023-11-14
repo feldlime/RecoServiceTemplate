@@ -7,8 +7,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.security.api_key import APIKey
 from pydantic import BaseModel
 
-from service.api.exceptions import ModelNotFoundError, UnAuthorizedError, \
-    UserNotFoundError
+from service.api.exceptions import ModelNotFoundError, UnAuthorizedError, UserNotFoundError
 from service.log import app_logger
 
 # Load environment variables from .env file (with api token)
