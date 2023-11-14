@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import UserNotFoundError, ModelNotFoundError
 from service.log import app_logger
 
 
@@ -38,6 +38,8 @@ async def get_reco(
     # Write your code here
     if model_name == "range_test":
         reco = list(range(10))
+    else:
+        raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
