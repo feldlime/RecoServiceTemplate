@@ -20,7 +20,7 @@ def test_get_reco_success(
     service_config: ServiceConfig,
 ) -> None:
     user_id = 123
-    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
+    path = GET_RECO_PATH.format(model_name="range_test", user_id=user_id)
     with client:
         response = client.get(path)
     assert response.status_code == HTTPStatus.OK

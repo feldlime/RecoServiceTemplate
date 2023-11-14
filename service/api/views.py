@@ -27,6 +27,8 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={404: {"description": "Invalid model name or user not found"},
+               },
 )
 async def get_reco(
     request: Request,
