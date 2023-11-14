@@ -43,3 +43,5 @@ jobs:
 
       - name: Run linters
         run: make test
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
