@@ -36,6 +36,8 @@ async def get_reco(
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     # Write your code here
+    if model_name == "range_test":
+        reco = list(range(10))
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
