@@ -62,7 +62,7 @@ def test_get_reco_auth(
 ) -> None:
     user_id = 123
     path = GET_RECO_PATH.format(model_name="range_test", user_id=user_id)
-    client.headers = {"Authorization": f"Bearer 123456"}
+    client.headers = {"Authorization": "Bearer 123456"}
     with client:
         response = client.get(path)
 
