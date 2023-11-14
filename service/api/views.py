@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError, ModelNotFoundError
+from service.api.exceptions import ModelNotFoundError, UserNotFoundError
 from service.log import app_logger
 
 
