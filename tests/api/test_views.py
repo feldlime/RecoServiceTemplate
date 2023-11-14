@@ -1,7 +1,7 @@
 import os
 from http import HTTPStatus
-from httpx import Headers
 
+from httpx import Headers
 from starlette.testclient import TestClient
 
 from service.settings import ServiceConfig
