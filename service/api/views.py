@@ -46,8 +46,8 @@ async def get_reco(request: Request, model_name: str, user_id: int, authorizatio
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
-    reco = get_reccomendation(user_id, request.app.state.k_recs)
-    # reco = list(range(1, 11))
+    # reco = get_reccomendation(user_id, request.app.state.k_recs)
+    reco = list(range(1, 11))
     return RecoResponse(user_id=user_id, items=reco)
 
 
