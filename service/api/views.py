@@ -40,11 +40,7 @@ async def health() -> str:
     return "I am alive"
 
 
-@router.get(
-    path="/reco/{model_name}/{user_id}",
-    tags=["Recommendations"],
-    response_model=RecoResponse,
-)
+@router.get(path="/reco/{model_name}/{user_id}", tags=["Recommendations"], response_model=RecoResponse)
 async def get_reco(
     request: Request, model_name: ModelName, user_id: int, token: str = Security(get_token)
 ) -> RecoResponse:
