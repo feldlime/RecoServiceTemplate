@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import UserNotFoundError, ModelNotFoundError, WrongTokenError
 from service.log import app_logger
 
 
@@ -27,6 +27,39 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={
+        401: {
+            "description": "Wrong token",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error_key": "wrong_token",
+                        "error_message": "Token is wrong",
+                        "error_loc": 'null'
+                    }
+                }
+            }
+        },
+        404: {
+            "description": "User or model not found",
+            "content": {
+                "application/json": {
+                    "example": [
+                        {
+                            "error_key": "model_not_found",
+                            "error_message": "Model not found",
+                            "error_loc": 'null'
+                        },
+                        {
+                            "error_key": "user_not_found",
+                            "error_message": "User is unknown",
+                            "error_loc": 'null'
+                        }
+                    ]
+                }
+            }
+        }
+    }
 )
 async def get_reco(
     request: Request,
@@ -35,13 +68,21 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    # Write your code here
+    k_recs = request.app.state.k_recs
+    models = request.app.state.models
+    auth_token = request.headers.get('authorization').split()[1]
+
+    if auth_token != request.app.state.orig_token:
+        raise WrongTokenError()
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
-    k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
+    if model_name not in request.app.state.models:
+        raise ModelNotFoundError(error_message=f"Model {model_name} not found")
+
+    reco = models[model_name].get_reco(user_id, k_recs)
+
     return RecoResponse(user_id=user_id, items=reco)
 
 

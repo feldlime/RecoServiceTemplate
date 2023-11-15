@@ -10,6 +10,7 @@ from ..settings import ServiceConfig
 from .exception_handlers import add_exception_handlers
 from .middlewares import add_middlewares
 from .views import add_views
+from .reco_models import models_dict
 
 __all__ = ("create_app",)
 
@@ -35,6 +36,8 @@ def create_app(config: ServiceConfig) -> FastAPI:
 
     app = FastAPI(debug=False)
     app.state.k_recs = config.k_recs
+    app.state.orig_token = 'secret_bearer_token_123456789987654321'
+    app.state.models = models_dict
 
     add_views(app)
     add_middlewares(app)
