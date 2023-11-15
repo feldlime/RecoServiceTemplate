@@ -6,8 +6,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from service.api.exceptions import UserNotFoundError
 
-# users = pd.read_csv("service/api/recsys/kion_train/users.csv")
-# interactions = pd.read_csv("service/api/recsys/kion_train/interactions.csv")
+users = pd.read_csv("service/api/recsys/kion_train/users.csv")
+interactions = pd.read_csv("service/api/recsys/kion_train/interactions.csv")
 
 
 def user_based_recsys(user_id, n_recommendations=10):
