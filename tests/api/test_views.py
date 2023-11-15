@@ -14,13 +14,22 @@ def test_health(
         response = client.get("/health")
     assert response.status_code == HTTPStatus.OK
 
+def test_get_reco_unknown_model_name(
+    client: TestClient,
+    service_config: ServiceConfig,
+) -> None:
+    user_id = 123
+    path = GET_RECO_PATH.format(model_name="unknown_model", user_id=user_id)
+    with client:
+        response = client.get(path)
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 def test_get_reco_success(
     client: TestClient,
     service_config: ServiceConfig,
 ) -> None:
     user_id = 123
-    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
+    path = GET_RECO_PATH.format(model_name="top", user_id=user_id)
     with client:
         response = client.get(path)
     assert response.status_code == HTTPStatus.OK
@@ -34,7 +43,7 @@ def test_get_reco_for_unknown_user(
     client: TestClient,
 ) -> None:
     user_id = 10**10
-    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
+    path = GET_RECO_PATH.format(model_name="top", user_id=user_id)
     with client:
         response = client.get(path)
     assert response.status_code == HTTPStatus.NOT_FOUND
