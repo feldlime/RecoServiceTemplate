@@ -55,7 +55,6 @@ def test_get_reco_with_unknown_model(
 def test_check_authorizatin_success(
     client: TestClient,
 ) -> None:
-    model_name = "model_name"
     with client:
         response = client.get("/health", headers={"Authorization": "Bearer mYOHbHbOwViaarXnJGlAihcJhIjjQDUQ"})
     assert response.status_code == HTTPStatus.OK
@@ -65,7 +64,6 @@ def test_check_authorizatin_success(
 def test_check_authorizatin_unsuccess(
     client: TestClient,
 ) -> None:
-    model_name = "model_name"
     with client:
         response = client.get("/health", headers={"Authorization": "Bearer mYOHbOwarXnJGlAihcJhIjjQDUQ"})
     assert response.status_code == HTTPStatus.UNAUTHORIZED

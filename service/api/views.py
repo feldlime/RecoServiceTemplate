@@ -4,7 +4,6 @@ from fastapi import APIRouter, FastAPI, Header, Request
 from pydantic import BaseModel
 
 from service.api.exceptions import InvalidAuthorization, ModelNotFoundError, UserNotFoundError
-from service.api.recsys.user_based_recsys import get_reccomendation
 from service.log import app_logger
 
 
@@ -16,9 +15,9 @@ class RecoResponse(BaseModel):
 router = APIRouter()
 
 
-def check_access(authorization):
+def check_access(authorization: str):
     if authorization is None:
-        raise InvalidAuthorization(error_message=f"No token")
+        raise InvalidAuthorization(error_message="No token")
     token = authorization.split(" ")[-1]
     SECRET_KEY = "mYOHbHbOwViaarXnJGlAihcJhIjjQDUQ"
     if token != SECRET_KEY:
