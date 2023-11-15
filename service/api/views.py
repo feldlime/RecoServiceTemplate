@@ -1,6 +1,7 @@
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, Depends, FastAPI, Request
+from fastapi.security import HTTPBearer
 from pydantic import BaseModel
 
 from service.api.exceptions import ModelNotFoundError, UserNotFoundError, WrongTokenError
@@ -12,6 +13,7 @@ class RecoResponse(BaseModel):
     items: List[int]
 
 
+bearer = HTTPBearer()
 router = APIRouter()
 
 
@@ -36,6 +38,18 @@ async def health() -> str:
                 }
             },
         },
+        403: {
+            "description": "No Authorisation header",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "errors": [
+                            {"error_key": "http_exception", "error_message": "Not authenticated", "error_loc": "null"}
+                        ]
+                    }
+                }
+            },
+        },
         404: {
             "description": "User or model not found",
             "content": {
@@ -49,18 +63,16 @@ async def health() -> str:
         },
     },
 )
-async def get_reco(
-    request: Request,
-    model_name: str,
-    user_id: int,
-) -> RecoResponse:
+async def get_reco(request: Request, model_name: str, user_id: int, token: str = Depends(bearer)) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     k_recs = request.app.state.k_recs
     models = request.app.state.models
-    auth_token = request.headers.get("authorization").split()[1]
+    true_token = request.app.state.true_token
 
-    if auth_token != request.app.state.orig_token:
+    auth_token = token.credentials
+
+    if auth_token != true_token:
         raise WrongTokenError()
 
     if user_id > 10**9:

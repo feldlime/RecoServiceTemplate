@@ -6,10 +6,10 @@ import uvloop
 from fastapi import FastAPI
 
 from ..log import app_logger, setup_logging
+from ..reco_models import models_dict
 from ..settings import ServiceConfig
 from .exception_handlers import add_exception_handlers
 from .middlewares import add_middlewares
-from .reco_models import models_dict
 from .views import add_views
 
 __all__ = ("create_app",)
@@ -36,7 +36,7 @@ def create_app(config: ServiceConfig) -> FastAPI:
 
     app = FastAPI(debug=False)
     app.state.k_recs = config.k_recs
-    app.state.orig_token = "secret_bearer_token_123456789987654321"
+    app.state.true_token = config.token
     app.state.models = models_dict
 
     add_views(app)
