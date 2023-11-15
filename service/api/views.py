@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError, ModelNotFoundError, WrongTokenError
+from service.api.exceptions import ModelNotFoundError, UserNotFoundError, WrongTokenError
 from service.log import app_logger
 
 
@@ -32,34 +32,22 @@ async def health() -> str:
             "description": "Wrong token",
             "content": {
                 "application/json": {
-                    "example": {
-                        "error_key": "wrong_token",
-                        "error_message": "Token is wrong",
-                        "error_loc": 'null'
-                    }
+                    "example": {"error_key": "wrong_token", "error_message": "Token is wrong", "error_loc": "null"}
                 }
-            }
+            },
         },
         404: {
             "description": "User or model not found",
             "content": {
                 "application/json": {
                     "example": [
-                        {
-                            "error_key": "model_not_found",
-                            "error_message": "Model not found",
-                            "error_loc": 'null'
-                        },
-                        {
-                            "error_key": "user_not_found",
-                            "error_message": "User is unknown",
-                            "error_loc": 'null'
-                        }
+                        {"error_key": "model_not_found", "error_message": "Model not found", "error_loc": "null"},
+                        {"error_key": "user_not_found", "error_message": "User is unknown", "error_loc": "null"},
                     ]
                 }
-            }
-        }
-    }
+            },
+        },
+    },
 )
 async def get_reco(
     request: Request,
@@ -70,7 +58,7 @@ async def get_reco(
 
     k_recs = request.app.state.k_recs
     models = request.app.state.models
-    auth_token = request.headers.get('authorization').split()[1]
+    auth_token = request.headers.get("authorization").split()[1]
 
     if auth_token != request.app.state.orig_token:
         raise WrongTokenError()

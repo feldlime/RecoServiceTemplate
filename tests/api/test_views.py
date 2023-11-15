@@ -6,7 +6,7 @@ from service.settings import ServiceConfig
 
 GET_RECO_PATH = "/reco/{model_name}/{user_id}"
 CORRECT_AUTH = "Bearer secret_bearer_token_123456789987654321"
-CORRECT_MODEL_NAME = 'dummy_model'
+CORRECT_MODEL_NAME = "dummy_model"
 
 
 def test_health(
@@ -47,7 +47,7 @@ def test_get_reco_for_unknown_model(
     client: TestClient,
 ) -> None:
     user_id = 123
-    path = GET_RECO_PATH.format(model_name='wrong_model_name', user_id=user_id)
+    path = GET_RECO_PATH.format(model_name="wrong_model_name", user_id=user_id)
     with client:
         response = client.get(path, headers={"Authorization": CORRECT_AUTH})
     assert response.status_code == HTTPStatus.NOT_FOUND

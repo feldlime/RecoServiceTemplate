@@ -12,6 +12,4 @@ class DummyModel(BaseModel):
         return list(range(k_recs))
 
 
-models_dict = {
-    'dummy_model': DummyModel()
-}
+models_dict = {"dummy_model": DummyModel()}
