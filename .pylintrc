@@ -53,7 +53,8 @@ unsafe-load-any-extension=no
 confidence=
 
 # Disable the message, report, category or checker with the given id(s).
-disable=arguments-differ,
+disable=attr-defined,
+        arguments-differ,
         bad-inline-option,
         deprecated-pragma,
         duplicate-code,
