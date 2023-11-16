@@ -1,14 +1,14 @@
 from http import HTTPStatus
-from os import getenv
 
+from dotenv import dotenv_values
 from starlette.testclient import TestClient
 
 from service.settings import ServiceConfig
 
-token = getenv("TOKEN", "secret_bearer_token_123456789987654321")
+config = dotenv_values()
 
 GET_RECO_PATH = "/reco/{model_name}/{user_id}"
-CORRECT_AUTH = f"Bearer {token}"
+CORRECT_AUTH = f"Bearer {config['TOKEN']}"
 CORRECT_MODEL_NAME = "dummy_model"
 
 
