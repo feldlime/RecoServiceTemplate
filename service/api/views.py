@@ -23,6 +23,7 @@ async def health() -> str:
     return "200"
 
 
+
 @router.get(
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
