@@ -2,6 +2,7 @@ import typing as tp
 from http import HTTPStatus
 
 
+
 class AppException(Exception):
     def __init__(
         self,
@@ -23,6 +24,16 @@ class UserNotFoundError(AppException):
         status_code: int = HTTPStatus.NOT_FOUND,
         error_key: str = "user_not_found",
         error_message: str = "User is unknown",
+        error_loc: tp.Optional[tp.Sequence[str]] = None,
+    ):
+        super().__init__(status_code, error_key, error_message, error_loc)
+
+class ModelNotFoundError(AppException):
+    def __init__(
+        self,
+        status_code: int = HTTPStatus.NOT_FOUND,
+        error_key: str = "model_not_found",
+        error_message: str = "Model not found",
         error_loc: tp.Optional[tp.Sequence[str]] = None,
     ):
         super().__init__(status_code, error_key, error_message, error_loc)

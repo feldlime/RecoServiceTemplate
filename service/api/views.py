@@ -1,9 +1,9 @@
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, FastAPI, Request,HTTPException
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import UserNotFoundError, ModelNotFoundError
 from service.log import app_logger
 
 
@@ -20,13 +20,24 @@ router = APIRouter()
     tags=["Health"],
 )
 async def health() -> str:
-    return "I am alive"
+    return "200"
 
 
 @router.get(
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={
+        200: {
+            "description": "Successful response",
+            "model": RecoResponse,
+        },
+        404: {
+            "description": "Model not found or User not found",
+            "content": {"application/json": {"example": {"detail": "Model not found"}}},
+        },
+    },
+
 )
 async def get_reco(
     request: Request,
@@ -35,8 +46,9 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    # Write your code here
-
+    if model_name not in ["personal", "anotherModel"]:  # Add your model names
+        raise HTTPException(status_code=404, detail="Model not found")
+    
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
