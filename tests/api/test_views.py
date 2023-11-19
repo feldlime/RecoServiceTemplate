@@ -39,3 +39,30 @@ def test_get_reco_for_unknown_user(
         response = client.get(path)
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json()["errors"][0]["error_key"] == "user_not_found"
+
+
+def test_get_reco_with_invalid_model(
+    client: TestClient,
+    service_config: ServiceConfig,
+) -> None:
+    user_id = 123
+    invalid_model = "invalid_model"
+    path = GET_RECO_PATH.format(model_name=invalid_model, user_id=user_id)
+    with client:
+        response = client.get(path)
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json()["errors"][0]["error_key"] == "model_not_found"
+    
+    
+def test_get_reco_with_invalid_token(
+    client: TestClient,
+    service_config: ServiceConfig,
+) -> None:
+    user_id = 123
+    invalid_token = "invalid_token"
+    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
+    headers = {"Authorization": f"Bearer {invalid_token}"}
+    with client:
+        response = client.get(path, headers=headers)
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json()["errors"][0]["error_key"] == "authorization_failed"
