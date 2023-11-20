@@ -2,8 +2,8 @@
 name = "reco_service"
 version = "0.0.1"
 description = ""
-authors = ["Emiliy Feldman <feldlime@yandex.ru>"]
-maintainers = ["Emiliy Feldman <feldlime@yandex.ru>"]
+authors = ["Polina Leonteva"]
+maintainers = ["Polina Leonteva"]
 readme = "README.md"
 packages = [
     { include = "service" }
@@ -14,12 +14,12 @@ python = "^3.8.1"
 fastapi = "^0.104.0"
 pydantic = "^2.4.2"
 gunicorn = "^21.2.0"
-uvloop = "^0.19.0"
 uvicorn = "^0.23.0"
 orjson = "^3.9.10"
 starlette = "^0.27.0"
 httpx = "^0.22.0"  # for starlette.testclient
 pydantic-settings = "^2.0.3"
+isort = "^5.12.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "7.4.3"

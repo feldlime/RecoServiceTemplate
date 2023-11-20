@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - HW1
   pull_request:
     types: [opened, synchronize]
 
@@ -32,13 +33,15 @@ jobs:
         with:
           path: .venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
-  
+
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install 
-      
+        run: poetry install
+
       - name: Run tests
         run: make lint
 
       - name: Run linters
         run: make test
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
