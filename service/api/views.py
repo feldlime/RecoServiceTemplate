@@ -24,7 +24,7 @@ class InternalServerErrorModel(BaseModel):
 
 security = HTTPBearer()
 API_KEY = "i_love_recsys"
-VALID_MODELS = ['some_model']
+VALID_MODELS = ['some_model', 'best_random']
 
 
 async def verify_token(
