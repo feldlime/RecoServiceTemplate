@@ -1,10 +1,10 @@
 from http import HTTPStatus
-
 from starlette.testclient import TestClient
-
 from service.settings import ServiceConfig
+from service.api.authorization import APIKeys
 
 GET_RECO_PATH = "/reco/{model_name}/{user_id}"
+models = ["random", "top_popular", "weighted_random_recommendation"]
 
 
 def test_health(
@@ -20,22 +20,48 @@ def test_get_reco_success(
     service_config: ServiceConfig,
 ) -> None:
     user_id = 123
-    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
-    with client:
-        response = client.get(path)
-    assert response.status_code == HTTPStatus.OK
-    response_json = response.json()
-    assert response_json["user_id"] == user_id
-    assert len(response_json["items"]) == service_config.k_recs
-    assert all(isinstance(item_id, int) for item_id in response_json["items"])
+    for model_name in models:
+        path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
+        with client:
+            response = client.get(path, headers={"Authorization": APIKeys})
+        assert response.status_code == HTTPStatus.OK
+        response_json = response.json()
+        assert response_json["user_id"] == user_id
+        assert len(response_json["items"]) == service_config.k_recs
+        assert all(isinstance(item_id, int) for item_id in response_json["items"])
 
 
 def test_get_reco_for_unknown_user(
     client: TestClient,
 ) -> None:
     user_id = 10**10
-    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
+    model_name = "random"
+    path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
     with client:
-        response = client.get(path)
+        response = client.get(path, headers={"Authorization": APIKeys})
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json()["errors"][0]["error_key"] == "user_not_found"
+
+
+def test_get_reco_for_unknown_model(
+    client: TestClient,
+) -> None:
+    user_id = 123
+    model_name = "error_model"
+    path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
+    with client:
+        response = client.get(path, headers={"Authorization": APIKeys})
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json()["errors"][0]["error_key"] == "model_not_found"
+
+
+def failed_authorization(
+    client: TestClient,
+) -> None:
+    user_id = 123
+    model_name = "top"
+    path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
+    with client:
+        response = client.get(path, headers={"Authorization": 1})
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json()["errors"][0]["error_key"] == "user_not_authorized"
