@@ -1,10 +1,9 @@
+import random
 from typing import List
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
-import random
-import numpy as np
 
 from service.api.exceptions import UserNotFoundError, ModelNotFoundError,AuthorizationError
 from service.log import app_logger
