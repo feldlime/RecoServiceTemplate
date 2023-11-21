@@ -10,7 +10,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8.1"
+python = ">=3.9,<3.11"
 fastapi = "^0.104.0"
 pydantic = "^2.4.2"
 gunicorn = "^21.2.0"
@@ -20,6 +20,7 @@ orjson = "^3.9.10"
 starlette = "^0.27.0"
 httpx = "^0.22.0"  # for starlette.testclient
 pydantic-settings = "^2.0.3"
+rectools = "^0.4.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "7.4.3"

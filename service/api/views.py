@@ -6,6 +6,8 @@ from pydantic import BaseModel
 from service.api.exceptions import UserNotFoundError
 from service.log import app_logger
 
+from RecSysService.service.models import TopKPopular
+
 
 class RecoResponse(BaseModel):
     user_id: int
@@ -13,6 +15,8 @@ class RecoResponse(BaseModel):
 
 
 router = APIRouter()
+
+top_popular_model = TopKPopular()
 
 
 @router.get(
@@ -35,14 +39,15 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    # Write your code here
+    if model_name == 'top_popular':
+        recs = top_popular_model.recomend()
+    else:
+        raise ValueError('сделать нормальную ошибку')
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
-
-    k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
-    return RecoResponse(user_id=user_id, items=reco)
+    
+    return RecoResponse(user_id=user_id, items=recs)
 
 
 def add_views(app: FastAPI) -> None:
