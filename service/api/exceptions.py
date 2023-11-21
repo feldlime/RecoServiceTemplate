@@ -27,6 +27,7 @@ class UserNotFoundError(AppException):
     ):
         super().__init__(status_code, error_key, error_message, error_loc)
 
+
 class ModelNotFoundError(AppException):
     def __init__(
         self,
@@ -36,7 +37,8 @@ class ModelNotFoundError(AppException):
         error_loc: tp.Optional[tp.Sequence[str]] = None,
     ):
         super().__init__(status_code, error_key, error_message, error_loc)
-        
+
+
 class AuthorizationError(AppException):
     def __init__(
         self,

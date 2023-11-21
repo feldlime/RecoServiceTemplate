@@ -14,7 +14,6 @@ __all__ = ("create_app",)
 
 
 def setup_asyncio(thread_name_prefix: str) -> None:
-
     loop = asyncio.get_event_loop()
 
     executor = ThreadPoolExecutor(thread_name_prefix=thread_name_prefix)
