@@ -65,4 +65,4 @@ def test_get_reco_with_invalid_token(
     with client:
         response = client.get(path, headers=headers)
     assert response.status_code == HTTPStatus.UNAUTHORIZED
-    assert response.json()["errors"][0]["error_key"] == "authorization_failed"
+    assert response.json()["errors"][0]["error_key"] == "authorization_error"

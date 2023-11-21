@@ -43,8 +43,6 @@ async def health() -> str:
               "content": {"application/json": {"example": {"user_id": 1, "items": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}}}},
         401: {"description": "Unauthorized",
               "content": {"application/json": {"example": {"error": "Unauthorized"}}}},
-        403: {"description": "Forbidden",
-              "content": {"application/json": {"example": {"error": "Forbidden"}}}},
         404: {"description": "Not Found",
               "content": {"application/json": {"example": {"error": "Not Found"}}}},
         500: {"description": "Internal Server Error",
@@ -73,8 +71,7 @@ async def get_reco(
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
         
-        
-    k_recs = request.app.state.k_recs
+
     return RecoResponse(user_id=user_id, items=reco)
 
 
