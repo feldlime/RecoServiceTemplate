@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from service.api.exceptions import UserNotFoundError, ModelNotFoundError
 from service.log import app_logger
 
-from RecSysService.service.models import TopKPopular
+from service.models import TopKPopular
 
 
 class RecoResponse(BaseModel):
