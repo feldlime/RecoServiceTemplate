@@ -1,25 +1,22 @@
-from enum import Enum
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request, Security
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 
+from recommenders.model_loader import load
+from recommenders.model_names import ModelName
+from recommenders.popular import get_popular
 from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserNotFoundError
 from service.api.keys import API_KEYS
-from service.api.recomendations import get_popular
 from service.log import app_logger
+
+userknn_model = load("models/user_knn.pkl")
 
 
 class RecoResponse(BaseModel):
     user_id: int
     items: List[int]
-
-
-class ModelName(str, Enum):
-    range = "range"
-    popular = "popular"
-    other = "unknown"
 
 
 router = APIRouter()
@@ -53,6 +50,8 @@ async def get_reco(
         reco = list(range(k_recs))
     elif model_name is ModelName.popular:
         reco = get_popular(k_recs)
+    elif model_name is ModelName.userknn:
+        reco = userknn_model.recommend(user_id, N_recs=k_recs)
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 
