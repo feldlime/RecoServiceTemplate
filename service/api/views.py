@@ -7,6 +7,7 @@ from service.api.constants import AVAILABLE_MODEL_NAMES
 from service.api.exceptions import ModelNotFoundError, UserNotFoundError
 from service.log import app_logger
 
+from service.api.recommender import Recommender
 
 class RecoResponse(BaseModel):
     user_id: int
@@ -14,7 +15,9 @@ class RecoResponse(BaseModel):
 
 
 router = APIRouter()
-
+recommender = Recommender(dataset_path = "artifacts/interactions.csv",
+                          warm_model_path = "artifacts/first_experiment_popular.pkl",
+                          hot_model_path = "artifacts/task3_cropped20_experiment_tfidf_userknn.pkl")
 
 @router.get(
     path="/health",
@@ -36,14 +39,16 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
+    # Проверка на корректность имени модели
     if model_name not in AVAILABLE_MODEL_NAMES:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 
+    # Проверка на корректность индекса пользователя
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
     k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
+    reco = recommender.recommend(user_id, k_recs)
     return RecoResponse(user_id=user_id, items=reco)
 
 
