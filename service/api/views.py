@@ -13,24 +13,18 @@ from service.log import app_logger
 MODEL_PATH = "service/models/baseknn.pkl"
 userknn = load_model(MODEL_PATH)
 
-
-
 class NotFoundModel(BaseModel):
     detail: str
-
 
 class UnauthorizedModel(BaseModel):
     detail: str
 
-
 class InternalServerErrorModel(BaseModel):
     detail: str
-
 
 security = HTTPBearer()
 API_KEY = "i_love_recsys"
 VALID_MODELS = ['some_model', 'best_random', 'knn']
-
 
 async def verify_token(
     http_authorization_credentials: HTTPAuthorizationCredentials = Security(
@@ -40,14 +34,11 @@ async def verify_token(
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED,
                             detail="Invalid or missing token")
 
-
 class RecoResponse(BaseModel):
     user_id: int
     items: List[int]
 
-
 router = APIRouter()
-
 
 @router.get(
     path="/health",
@@ -64,7 +55,6 @@ router = APIRouter()
 )
 async def health() -> str:
     return "I am alive"
-
 
 @router.get(
     path="/reco/{model_name}/{user_id}",
@@ -119,7 +109,6 @@ async def get_reco(
         reco = list(range(k_recs))
 
     return RecoResponse(user_id=user_id, items=reco)
-
 
 def add_views(app: FastAPI) -> None:
     app.include_router(router)
