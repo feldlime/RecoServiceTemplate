@@ -33,24 +33,24 @@ class Recommender():
 
         print("Models loaded")
 
-        df_hot = pd.DataFrame({'user_id': self.interactions[self.interactions['user_id'].isin(self.hot_users)]["user_id"]})
-        self.recos_hot = self.hot_model.predict(df_hot)
-
-        print("Hot recos predicted")
-
-        df_warm = self.interactions[~self.interactions['user_id'].isin(df_hot['user_id'])].drop_duplicates(subset='user_id')
-        self.recos_warm = self.warm_model.recommend(
-            users=df_warm['user_id'],
-            dataset=self.dataset,
-            k=10,
-            filter_viewed=True,
-        )
-
-        print("Warm recos predicted")
-
-        self.recos_cold = self.popular_items
-
-        print("Cold recos predicted")
+        # df_hot = pd.DataFrame({'user_id': self.interactions[self.interactions['user_id'].isin(self.hot_users)]["user_id"]})
+        # self.recos_hot = self.hot_model.predict(df_hot)
+        #
+        # print("Hot recos predicted")
+        #
+        # df_warm = self.interactions[~self.interactions['user_id'].isin(df_hot['user_id'])].drop_duplicates(subset='user_id')
+        # self.recos_warm = self.warm_model.recommend(
+        #     users=df_warm['user_id'],
+        #     dataset=self.dataset,
+        #     k=10,
+        #     filter_viewed=True,
+        # )
+        #
+        # print("Warm recos predicted")
+        #
+        # self.recos_cold = self.popular_items
+        #
+        # print("Cold recos predicted")
 
     def recommend(self, user_id: int, k_recs: int):
         # print(f"user_id {user_id} recommend body")
@@ -58,12 +58,12 @@ class Recommender():
         if self.hot_users.isin([user_id]).any():
             # return list(range(k_recs))
             # print(f"user_id {user_id} hot start predict")
-            # user_id_kostyl = pd.DataFrame({'user_id': [user_id]})
-            # recos = self.hot_model.predict(user_id_kostyl)
+            user_id_kostyl = pd.DataFrame({'user_id': [user_id]})
+            recos = self.hot_model.predict(user_id_kostyl)
 
-            recos = self.recos_hot[ self.recos_hot['user_id'].isin([user_id])]["item_id"]
-            print(f"user_id {user_id} is hot; recos {recos}; len{len(recos)}")
-            return recos
+            # recos = self.recos_hot[ self.recos_hot['user_id'].isin([user_id])]["item_id"]
+            # print(f"user_id {user_id} is hot; recos {recos}; len{len(recos)}")
+            return recos["item_id"]
 
         # Теплый
         if user_id not in self.missing_user_id_values:
@@ -74,13 +74,14 @@ class Recommender():
             #     dataset=self.dataset,
             #     k=k_recs,
             #     filter_viewed=True)
-            recos = self.recos_warm[ self.recos_warm['user_id'].isin([user_id])]["item_id"]
-            print(f"user_id {user_id} is warm; recos {recos}; len{len(recos)}")
+            # recos = self.recos_warm[ self.recos_warm['user_id'].isin([user_id])]["item_id"]
+            # print(f"user_id {user_id} is warm; recos {recos}; len{len(recos)}")
+            recos = self.popular_items
             return recos
 
         # Холодный
         # print(f"user_id {user_id} cold start predict")
-        recos = self.recos_cold
-        print(f"user_id {user_id} is cold; recos {recos}; len{len(recos)}")
+        recos = self.popular_items
+        # print(f"user_id {user_id} is cold; recos {recos}; len{len(recos)}")
         return recos
 
