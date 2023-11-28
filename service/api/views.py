@@ -1,19 +1,14 @@
-import os
-import pickle
 import random
 from http import HTTPStatus
 from typing import List
 
-import pandas as pd
 from fastapi import APIRouter, FastAPI, HTTPException, Request, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
-
 from recomodels.model_proc import load_model, predict
+
 from service.api.exceptions import UserNotFoundError
 from service.log import app_logger
-
-
 
 MODEL_PATH = "service/models/baseknn.pkl"
 userknn = load_model(MODEL_PATH)
