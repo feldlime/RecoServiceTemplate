@@ -16,7 +16,7 @@ from service.log import app_logger
 class CustomUnpickler(pickle.Unpickler):
     def find_class(self, module, name):
         if name == 'UserKnn':
-            from service.userknn import UserKnn
+            from recmodels.userknn import UserKnn
             return UserKnn
         return super().find_class(module, name)
 
