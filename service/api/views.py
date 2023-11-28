@@ -14,9 +14,9 @@ from service.log import app_logger
 
 MODEL_PATH = "recmodels/baseknn.pkl"
 if os.path.exists(MODEL_PATH):
-    userknn_model = load_model(MODEL_PATH)
+    userknn = load_model(MODEL_PATH)
 else:
-    userknn_model = None
+    userknn = None
 
 
 class NotFoundModel(BaseModel):
