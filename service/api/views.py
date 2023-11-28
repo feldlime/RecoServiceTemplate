@@ -1,3 +1,4 @@
+import os
 import random
 from http import HTTPStatus
 from typing import List
@@ -13,7 +14,7 @@ from service.log import app_logger
 
 MODEL_PATH = "recmodels/baseknn.pkl"
 if os.path.exists(MODEL_PATH):
-    userknn_model = load(MODEL_PATH)
+    userknn_model = load_model(MODEL_PATH)
 else:
     userknn_model = None
 
