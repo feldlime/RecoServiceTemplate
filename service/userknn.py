@@ -62,7 +62,7 @@ class UserKnn():
             lambda x: self.idf(self.n, x))
         self.item_idf = item_idf
 
-    def fit(self, train: pd.DataFrame):
+    def fit(self, train: pd.DataFrame) -> None:
         self.user_knn = self.model
         self.get_mappings(train)
         self.weights_matrix = self.get_matrix(train,
