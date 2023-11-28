@@ -148,5 +148,6 @@ async def get_reco(
 
     return RecoResponse(user_id=user_id, items=reco)
 
+
 def add_views(app: FastAPI) -> None:
     app.include_router(router)
