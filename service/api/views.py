@@ -11,8 +11,11 @@ from recmodels.model_proc import load_model
 from service.api.exceptions import UserNotFoundError
 from service.log import app_logger
 
-MODEL_PATH = "recmodels/baseknn.pkl"
-userknn = load_model(MODEL_PATH)
+MODEL_PATH = "models/user_knn.pkl"
+if os.path.exists(MODEL_PATH):
+    userknn_model = load(MODEL_PATH)
+else:
+    userknn_model = None
 
 
 class NotFoundModel(BaseModel):
