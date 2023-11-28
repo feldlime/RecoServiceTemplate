@@ -24,10 +24,3 @@ def load_model(path: str):
             return CustomUnpickler(f).load()
         except Exception as e:
             raise RuntimeError(f"Failed to load the model from '{path}': {e}")
-
-def predict(userknn_model: UserKnn, user_id: int, N_recs: int = 10):
-  
-    user_df = pd.DataFrame([user_id], columns=['user_id'])
-    recommendations = userknn_model.predict(user_df, N_recs=N_recs)
-  
-    return recommendations
