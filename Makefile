@@ -58,7 +58,7 @@ lint: isort flake mypy pylint
 # Test
 
 .pytest:
-	poetry run pytest $(TESTS)
+	poetry run pytest $(TESTS) -W ignore::DeprecationWarning
 
 test: .venv .pytest
 
