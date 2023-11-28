@@ -5,7 +5,11 @@ from pydantic import BaseModel
 
 from service.api.exceptions import UserNotFoundError, ModelNotFoundError
 from service.log import app_logger
+import pandas as pd
+import pickle
 
+with open("user_knn_model.pkl", "rb") as file:
+    user_knn_model = pickle.load(file)
 
 class RecoResponse(BaseModel):
     user_id: int
@@ -53,9 +57,11 @@ async def get_reco(
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
-    k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
-    return RecoResponse(user_id=user_id, items=reco)
+    # Generate recommendations using your UserKnn model
+    reco_df = user_knn_model.predict(pd.DataFrame({'user_id': [user_id]}))
+    reco_items = reco_df['item_id'].tolist()
+
+    return RecoResponse(user_id=user_id, items=reco_items)
 
 
 def add_views(app: FastAPI) -> None:
