@@ -1,4 +1,5 @@
-AVAILABLE_MODEL_NAMES = ["task3_crop12",
+AVAILABLE_MODEL_NAMES = ["vorkov_main",
+                         "task3_crop12",
                          "task3_crop5",
                          "task3_crop12_cosine",
                          "task3_crop12_tfidf",
