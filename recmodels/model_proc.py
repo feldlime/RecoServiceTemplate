@@ -1,7 +1,13 @@
 import os
 import pickle
 import pandas as pd
-from recmodels.userknn import UserKnn
+
+class CustomUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if name == 'UserKnn':
+            from recmodels.userknn import UserKnn
+            return UserKnn
+        return super().find_class(module, name)
 
 class CustomUnpickler(pickle.Unpickler):
     def find_class(self, module, name):
