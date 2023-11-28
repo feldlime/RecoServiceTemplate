@@ -112,7 +112,7 @@ async def get_reco(
     if model_name == "best_random":
         reco = random.sample(range(0, 10), 10)
     elif model_name == 'knn':
-        reco = predict(userknn, user_id, N_recs=10)['item_id'].tolist()
+        reco = userknn.predict(pd.DataFrame([user_id], columns=['user_id']),N_recs=10)['item_id'].tolist()
     else:
         k_recs = request.app.state.k_recs
         reco = list(range(k_recs))
