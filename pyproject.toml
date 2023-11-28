@@ -6,7 +6,8 @@ authors = ["Emiliy Feldman <feldlime@yandex.ru>"]
 maintainers = ["Emiliy Feldman <feldlime@yandex.ru>"]
 readme = "README.md"
 packages = [
-    { include = "service" }
+    { include = "service" },
+    { include = "recmodels" }
 ]
 
 [tool.poetry.dependencies]
