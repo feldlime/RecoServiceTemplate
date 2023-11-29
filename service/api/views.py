@@ -1,15 +1,15 @@
+import zipfile
 from typing import List
 
 import wget
-import zipfile
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
 from service.api.constants import AVAILABLE_MODEL_NAMES
 from service.api.exceptions import ModelNotFoundError, UserNotFoundError
+from service.api.recommender import Recommender
 from service.log import app_logger
 
-from service.api.recommender import Recommender
 
 class RecoResponse(BaseModel):
     user_id: int
@@ -18,13 +18,16 @@ class RecoResponse(BaseModel):
 
 router = APIRouter()
 
-wget.download('https://github.com/irsafilo/KION_DATASET/raw/f69775be31fa5779907cf0a92ddedb70037fb5ae/data_original.zip')
-with zipfile.ZipFile('./data_original.zip', 'r') as zip_ref:
-    zip_ref.extractall('artifacts')
+wget.download("https://github.com/irsafilo/KION_DATASET/raw/f69775be31fa5779907cf0a92ddedb70037fb5ae/data_original.zip")
+with zipfile.ZipFile("./data_original.zip", "r") as zip_ref:
+    zip_ref.extractall("artifacts")
 
-recommender = Recommender(dataset_path = "artifacts/data_original/interactions.csv",
-                          warm_model_path = "artifacts/first_experiment_popular.pkl",
-                          hot_model_path = "artifacts/task3_cropped20_experiment_tfidf_userknn.pkl")
+recommender = Recommender(
+    dataset_path="artifacts/data_original/interactions.csv",
+    warm_model_path="artifacts/first_experiment_popular.pkl",
+    hot_model_path="artifacts/task3_cropped20_experiment_tfidf_userknn.pkl",
+)
+
 
 @router.get(
     path="/health",
