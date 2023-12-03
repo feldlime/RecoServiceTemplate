@@ -1,9 +1,9 @@
 from typing import List
-
-from fastapi import APIRouter, FastAPI, Header, Request
+from fastapi import APIRouter, FastAPI, Request, Header
 from pydantic import BaseModel
 
-from service.api.exceptions import InvalidAuthorization, ModelNotFoundError, UserNotFoundError
+from service.api.exceptions import ModelNotFoundError, UserNotFoundError
+from service.api.auth import check_access
 from service.log import app_logger
 
 
@@ -15,21 +15,11 @@ class RecoResponse(BaseModel):
 router = APIRouter()
 
 
-def check_access(authorization: str):
-    if authorization is None:
-        raise InvalidAuthorization(error_message="No token")
-    token = authorization.split(" ")[-1]
-    SECRET_KEY = "mYOHbHbOwViaarXnJGlAihcJhIjjQDUQ"
-    if token != SECRET_KEY:
-        raise InvalidAuthorization(error_message=f"Invalid token {token}")
-
-
 @router.get(
     path="/health",
     tags=["Health"],
 )
-async def health(authorization: str = Header(None)) -> str:
-    check_access(authorization)
+async def health() -> str:
     return "I am alive"
 
 
@@ -38,15 +28,17 @@ async def health(authorization: str = Header(None)) -> str:
     tags=["Recommendations"],
     response_model=RecoResponse,
 )
-async def get_reco(request: Request, model_name: str, user_id: int, authorization: str = Header(None)) -> RecoResponse:
+async def get_reco(model_name: str, user_id: int, request: Request, authorization: str = Header(None)) -> RecoResponse:
     check_access(authorization)
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
+
     if model_name != "user_based":
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
-    # reco = get_reccomendation(user_id, request.app.state.k_recs)
-    reco = list(range(1, 11))
+
+    k_recs = request.app.state.k_recs
+    reco = list(range(1, k_recs))
     return RecoResponse(user_id=user_id, items=reco)
 
 
