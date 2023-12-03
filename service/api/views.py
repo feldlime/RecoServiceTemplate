@@ -1,9 +1,10 @@
 from typing import List
-from fastapi import APIRouter, FastAPI, Request, Header
+
+from fastapi import APIRouter, FastAPI, Header, Request
 from pydantic import BaseModel
 
-from service.api.exceptions import ModelNotFoundError, UserNotFoundError
 from service.api.auth import check_access
+from service.api.exceptions import ModelNotFoundError, UserNotFoundError
 from service.log import app_logger
 
 

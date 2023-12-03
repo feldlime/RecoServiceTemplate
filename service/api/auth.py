@@ -1,9 +1,11 @@
 import os
+
 from dotenv import load_dotenv
 
 from .exceptions import InvalidAuthorization
 
 load_dotenv()
+
 
 def check_access(authorization: str):
     if authorization is None:
