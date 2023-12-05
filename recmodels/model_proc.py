@@ -24,3 +24,8 @@ def load_model(path: str):
             return CustomUnpickler(f).load()
         except Exception as e:
             raise RuntimeError(f"Failed to load the model from '{path}': {e}")
+            
+def get_recommendations_from_csv(user_id: int, n_items: int = 10):
+    reco_df = pd.read_csv('rico.csv')
+    filtered_reco = reco_df[reco_df['user_id'] == user_id]['item_id'].tolist()
+    return filtered_reco[:n_items]
