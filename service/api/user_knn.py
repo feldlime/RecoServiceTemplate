@@ -1,21 +1,16 @@
 from collections import Counter
 from typing import Dict
 
-
 import numpy as np
 import pandas as pd
 import scipy as sp
 from implicit.nearest_neighbours import ItemItemRecommender
-import pickle
-
+from annoy import AnnoyIndex
 
 class UserKnn():
-    """Class for fit-perdict UserKNN model
-    based on ItemKNN model from implicit.nearest_neighbours
-    """
+    """Class for fit-predict UserKNN model based on ItemKNN model from implicit.nearest_neighbours"""
 
     def __init__(self, model: ItemItemRecommender, N_users: int = 50, cold_start_recommender=None):
-        # Initialize UserKnn with the ItemItemRecommender model
         self.N_users = N_users
         self.model = model
         self.cold_start_recommender = cold_start_recommender
@@ -78,7 +73,6 @@ class UserKnn():
         self.user_knn.fit(self.weights_matrix)
         self.is_fitted = True
 
-
     def _generate_recs_mapper(
         self, model: ItemItemRecommender, user_mapping: Dict[int, int], user_inv_mapping: Dict[int, int], N: int
     ):
@@ -91,6 +85,7 @@ class UserKnn():
             except KeyError:
             # Handle missing user ID (e.g., return default recommendations)
                 return [], []
+
         return _recs_mapper
 
     def predict(self, test: pd.DataFrame, N_recs: int = 10):
@@ -106,9 +101,7 @@ class UserKnn():
         )
 
         recs = pd.DataFrame({"user_id": test["user_id"].unique()})
-        print("Unique user IDs in test data:", recs["user_id"].unique())
         recs["sim_user_id"], recs["sim"] = zip(*recs["user_id"].map(mapper))
-        print("User mapping results:", recs[["user_id", "sim_user_id"]])
         recs = recs.set_index("user_id").apply(pd.Series.explode).reset_index()
 
         recs = (
@@ -119,24 +112,24 @@ class UserKnn():
             .drop_duplicates(["user_id", "item_id"], keep="first")
             .merge(self.item_idf, left_on="item_id", right_on="index", how="left")
         )
-        
+
         recs["score"] = recs["sim"] * recs["idf"]
         recs = recs.sort_values(["user_id", "score"], ascending=False)
         recs["rank"] = recs.groupby("user_id").cumcount() + 1
-        
-        print("Final recommendations:", recs[["user_id", "item_id", "score", "rank"]])
+
         # Handle cold-start users
         cold_start_users = test[~test["user_id"].isin(self.users_inv_mapping)]
         if not cold_start_users.empty and self.cold_start_recommender:
             cold_start_recs = self.cold_start_recommender.predict(cold_start_users, N_recs)
             recs = pd.concat([recs, cold_start_recs], ignore_index=True)
 
-        # Task 2: Make recommendations for cold-start users using the cold_start_recommender
+        # Task 1.3 : Make recommendations for cold-start users using the cold_start_recommender
         return recs[recs["rank"] <= N_recs][["user_id", "item_id", "score", "rank"]]
-    def recommendation(self, user_id:int, N_recs:int=10):
+
+    def recommendation(self, user_id: int, N_recs: int = 10):
         df = pd.DataFrame({"user_id": [user_id], "item_id": [user_id]})
         return self.predict(df, N_recs=N_recs).item_id.to_list()
-
+    
 import os
 import pickle
 
