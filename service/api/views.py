@@ -8,7 +8,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
-from recmodels.model_proc import load_model, get_recommendations_from_csv
+from recmodels.model_proc import get_recommendations_from_csv, load_model
 from service.api.exceptions import UserNotFoundError
 from service.log import app_logger
 
