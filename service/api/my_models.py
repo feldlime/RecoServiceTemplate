@@ -29,7 +29,7 @@ if os.path.exists(PATH2):
     popular_recos = pd.read_csv(PATH2)["item_id"].to_list()
 
 
-def user_knn_model(user_id):
+def user_knn_model(user_id: int):
     if user_id in unique_users_userknn:
         user_recommendations = userknn_recos[userknn_recos["user_id"] == user_id]["item_id"].to_list()
         if user_recommendations:
@@ -45,7 +45,7 @@ def user_knn_model(user_id):
         return popular_recos[:10]
 
 
-def als_model(user_id):
+def als_model(user_id: int):
     if user_id in unique_users_als:
         user_recommendations = als_recos[als_recos["user_id"] == user_id]["item_id"].to_list()
         if user_recommendations:
@@ -61,7 +61,7 @@ def als_model(user_id):
         return popular_recos[:10]
 
 
-def lightfm_model(user_id):
+def lightfm_model(user_id: int):
     if user_id in unique_users_lightfm:
         user_recommendations = lightfm_recos[lightfm_recos["user_id"] == user_id]["item_id"].to_list()
         if user_recommendations:
