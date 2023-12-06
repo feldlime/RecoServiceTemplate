@@ -71,7 +71,7 @@ async def get_reco(
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
     if model_name == "top":
-        reco = range(1,11)
+        reco = range(1, 11)
     elif model_name == "random":
         reco = list(random.sample(range(1001), k_recs))
     elif model_name == "user_knn":
