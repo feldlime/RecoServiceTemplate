@@ -34,15 +34,16 @@ def user_knn_model(user_id: int):
         user_recommendations = userknn_recos[userknn_recos["user_id"] == user_id]["item_id"].to_list()
         if user_recommendations:
             if len(user_recommendations) >= 10:
-                return user_recommendations[:10]
+                user_recommendations = user_recommendations[:10]
             else:
                 num_popular_recos = 10 - len(user_recommendations)
                 popular_recos_subset = popular_recos[:num_popular_recos]
-                return user_recommendations + popular_recos_subset + [0] * num_popular_recos
+                user_recommendations = user_recommendations + popular_recos_subset + [0] * num_popular_recos
         else:
-            return popular_recos[:10]
+            user_recommendations = popular_recos[:10]
     else:
-        return popular_recos[:10]
+        user_recommendations = popular_recos[:10]
+    return user_recommendations
 
 
 def als_model(user_id: int):
@@ -50,15 +51,16 @@ def als_model(user_id: int):
         user_recommendations = als_recos[als_recos["user_id"] == user_id]["item_id"].to_list()
         if user_recommendations:
             if len(user_recommendations) >= 10:
-                return user_recommendations[:10]
+                user_recommendations = user_recommendations[:10]
             else:
                 num_popular_recos = 10 - len(user_recommendations)
                 popular_recos_subset = popular_recos[:num_popular_recos]
-                return user_recommendations + popular_recos_subset + [0] * num_popular_recos
+                user_recommendations = user_recommendations + popular_recos_subset + [0] * num_popular_recos
         else:
-            return popular_recos[:10]
+            user_recommendations = popular_recos[:10]
     else:
-        return popular_recos[:10]
+        user_recommendations = popular_recos[:10]
+    return user_recommendations
 
 
 def lightfm_model(user_id: int):
@@ -66,12 +68,13 @@ def lightfm_model(user_id: int):
         user_recommendations = lightfm_recos[lightfm_recos["user_id"] == user_id]["item_id"].to_list()
         if user_recommendations:
             if len(user_recommendations) >= 10:
-                return user_recommendations[:10]
+                user_recommendations = user_recommendations[:10]
             else:
                 num_popular_recos = 10 - len(user_recommendations)
                 popular_recos_subset = popular_recos[:num_popular_recos]
-                return user_recommendations + popular_recos_subset + [0] * num_popular_recos
+                user_recommendations = user_recommendations + popular_recos_subset + [0] * num_popular_recos
         else:
-            return popular_recos[:10]
+            user_recommendations = popular_recos[:10]
     else:
-        return popular_recos[:10]
+        user_recommendations = popular_recos[:10]
+    return user_recommendations
