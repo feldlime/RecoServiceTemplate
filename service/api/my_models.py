@@ -36,12 +36,15 @@ def popular_model():
 def user_knn_model(user_id: int):
     if user_id in unique_users_userknn:
         user_recommendations = userknn_recos[userknn_recos["user_id"] == user_id]["item_id"].to_list()
-        if len(user_recommendations) >= 10:
-            user_recommendations = user_recommendations[:10]
+        if user_recommendations:
+            if len(user_recommendations) >= 10:
+                user_recommendations = user_recommendations[:10]  # Вернуть первые 10 рекомендаций
+            else:
+                num_popular_recos = 10 - len(user_recommendations)
+                popular_recos_subset = popular_recos[:num_popular_recos]
+                user_recommendations = user_recommendations + popular_recos_subset
         else:
-            num_popular_recos = 10 - len(user_recommendations)
-            popular_recos_subset = popular_recos[:num_popular_recos]
-            user_recommendations = user_recommendations + popular_recos_subset
+            user_recommendations = popular_recos[:10]  # Вернуть первые 10 популярных рекомендаций
     else:
         user_recommendations = popular_recos[:10]
     return user_recommendations
@@ -50,12 +53,15 @@ def user_knn_model(user_id: int):
 def als_model(user_id: int):
     if user_id in unique_users_als:
         user_recommendations = als_recos[als_recos["user_id"] == user_id]["item_id"].to_list()
-        if len(user_recommendations) >= 10:
-            user_recommendations = user_recommendations[:10]
+        if user_recommendations:
+            if len(user_recommendations) >= 10:
+                user_recommendations = user_recommendations[:10]  # Вернуть первые 10 рекомендаций
+            else:
+                num_popular_recos = 10 - len(user_recommendations)
+                popular_recos_subset = popular_recos[:num_popular_recos]
+                user_recommendations = user_recommendations + popular_recos_subset
         else:
-            num_popular_recos = 10 - len(user_recommendations)
-            popular_recos_subset = popular_recos[:num_popular_recos]
-            user_recommendations = user_recommendations + popular_recos_subset
+            user_recommendations = popular_recos[:10]  # Вернуть первые 10 популярных рекомендаций
     else:
         user_recommendations = popular_recos[:10]
     return user_recommendations
@@ -64,12 +70,15 @@ def als_model(user_id: int):
 def lightfm_model(user_id: int):
     if user_id in unique_users_lightfm:
         user_recommendations = lightfm_recos[lightfm_recos["user_id"] == user_id]["item_id"].to_list()
-        if len(user_recommendations) >= 10:
-            user_recommendations = user_recommendations[:10]
+        if user_recommendations:
+            if len(user_recommendations) >= 10:
+                user_recommendations = user_recommendations[:10]  # Вернуть первые 10 рекомендаций
+            else:
+                num_popular_recos = 10 - len(user_recommendations)
+                popular_recos_subset = popular_recos[:num_popular_recos]
+                user_recommendations = user_recommendations + popular_recos_subset
         else:
-            num_popular_recos = 10 - len(user_recommendations)
-            popular_recos_subset = popular_recos[:num_popular_recos]
-            user_recommendations = user_recommendations + popular_recos_subset
+            user_recommendations = popular_recos[:10]  # Вернуть первые 10 популярных рекомендаций
     else:
         user_recommendations = popular_recos[:10]
     return user_recommendations
