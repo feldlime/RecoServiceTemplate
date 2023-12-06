@@ -38,7 +38,7 @@ def user_knn_model(user_id: int):
             else:
                 num_popular_recos = 10 - len(user_recommendations)
                 popular_recos_subset = popular_recos[:num_popular_recos]
-                user_recommendations = user_recommendations + popular_recos_subset + [0] * num_popular_recos
+                user_recommendations = user_recommendations + popular_recos_subset
         else:
             user_recommendations = popular_recos[:10]
     else:
@@ -55,7 +55,7 @@ def als_model(user_id: int):
             else:
                 num_popular_recos = 10 - len(user_recommendations)
                 popular_recos_subset = popular_recos[:num_popular_recos]
-                user_recommendations = user_recommendations + popular_recos_subset + [0] * num_popular_recos
+                user_recommendations = user_recommendations + popular_recos_subset
         else:
             user_recommendations = popular_recos[:10]
     else:
@@ -72,7 +72,7 @@ def lightfm_model(user_id: int):
             else:
                 num_popular_recos = 10 - len(user_recommendations)
                 popular_recos_subset = popular_recos[:num_popular_recos]
-                user_recommendations = user_recommendations + popular_recos_subset + [0] * num_popular_recos
+                user_recommendations = user_recommendations + popular_recos_subset
         else:
             user_recommendations = popular_recos[:10]
     else:
