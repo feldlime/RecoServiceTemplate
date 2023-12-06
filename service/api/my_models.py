@@ -4,27 +4,27 @@ import pandas as pd
 
 userknn_recos = pd.DataFrame()
 unique_users_userknn = []
-PATH = "service/recos/userknn_recos.csv"
+PATH = "recos/userknn_recos.csv"
 if os.path.exists(PATH):
     userknn_recos = pd.read_csv(PATH)
     unique_users_userknn = userknn_recos["user_id"].unique()
 
 als_recos = pd.DataFrame()
 unique_users_als = []
-PATH = "service/recos/userknn_recos.csv"
+PATH = "recos/userknn_recos.csv"
 if os.path.exists(PATH):
     als_recos = pd.read_csv(PATH)
     unique_users_als = als_recos["user_id"].unique()
 
 lightfm_recos = pd.DataFrame()
 unique_users_lightfm = []
-PATH = "service/recos/userknn_recos.csv"
+PATH = "recos/userknn_recos.csv"
 if os.path.exists(PATH):
     lightfm_recos = pd.read_csv(PATH)
     unique_users_lightfm = lightfm_recos["user_id"].unique()
 
 popular_recos = pd.DataFrame()
-PATH2 = "service/recos/popular.csv"
+PATH2 = "recos/popular.csv"
 if os.path.exists(PATH2):
     popular_recos = pd.read_csv(PATH2)["item_id"].to_list()
 
