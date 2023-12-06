@@ -3,21 +3,21 @@ import os
 import pandas as pd
 
 userknn_recos = pd.DataFrame()
-unique_users_userknn = list()
+unique_users_userknn = []
 PATH = "recos/userknn_recos.csv"
 if os.path.exists(PATH):
     userknn_recos = pd.read_csv(PATH)
     unique_users_userknn = userknn_recos["user_id"].unique()
 
 als_recos = pd.DataFrame()
-unique_users_als = list()
+unique_users_als = []
 PATH = "recos/userknn_recos.csv"
 if os.path.exists(PATH):
     als_recos = pd.read_csv(PATH)
     unique_users_als = als_recos["user_id"].unique()
 
 lightfm_recos = pd.DataFrame()
-unique_users_lightfm = list()
+unique_users_lightfm = []
 PATH = "recos/userknn_recos.csv"
 if os.path.exists(PATH):
     lightfm_recos = pd.read_csv(PATH)
