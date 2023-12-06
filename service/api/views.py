@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
 from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserNotFoundError
-from service.api.my_models import als_model, lightfm_model, popular_model, user_knn_model
+from service.api.my_models import als_model, lightfm_model, user_knn_model
 from service.log import app_logger
 
 
@@ -71,7 +71,7 @@ async def get_reco(
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
     if model_name == "top":
-        reco = popular_model()
+        reco = range(1,11)
     elif model_name == "random":
         reco = list(random.sample(range(1001), k_recs))
     elif model_name == "user_knn":
