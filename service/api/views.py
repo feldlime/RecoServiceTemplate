@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 from service.api.exceptions import ModelNotFoundError, UnAuthorizedError, UserNotFoundError
 from service.log import app_logger
+from service.models.validator import RecommendationValidator
 
 # Load environment variables from .env file (with api token)
 load_dotenv()
@@ -22,6 +23,7 @@ class RecoResponse(BaseModel):
 router = APIRouter()
 bearer = HTTPBearer()
 API_KEY = os.getenv("API_KEY")
+val_reco = RecommendationValidator()
 
 
 async def verify_token(
@@ -57,17 +59,15 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    # Write your code here
-    if model_name == "range_test":
-        reco = list(range(10))
+    if model_name in val_reco.model_names.keys():
+        model = val_reco.get_model(model_name)
+        reco = model.recommend(user_id)
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 
     if user_id > 10 ** 9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
 
-    k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
     return RecoResponse(user_id=user_id, items=reco)
 
 

@@ -8,7 +8,7 @@ from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 
 from service.log import app_logger
-from service.models import Error
+from service.models_err import Error
 from service.response import create_response, server_error
 
 from .exceptions import AppException

@@ -51,7 +51,7 @@ def test_get_reco_for_unknown_model(
     client: TestClient,
 ) -> None:
     user_id = 123
-    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
+    path = GET_RECO_PATH.format(model_name="range_test", user_id=user_id)
     client.headers = Headers(
         {"Authorization": f"Bearer {os.getenv('API_KEY')}"})
     with client:

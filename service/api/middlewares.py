@@ -6,7 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 
 from service.log import access_logger, app_logger
-from service.models import Error
+from service.models_err import Error
 from service.response import server_error
 
 

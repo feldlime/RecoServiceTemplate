@@ -48,3 +48,11 @@ class UnAuthorizedError(AppException):
         error_loc: tp.Optional[tp.Sequence[str]] = None,
     ):
         super().__init__(status_code, error_key, error_message, error_loc)
+
+
+class NotEnoughError(Exception):
+    def __init__(self, reco_len, message="Not enough in reco list, "):
+        self.reco_len = reco_len
+        self.message = message + str(self.reco_len)
+        super().__init__(self.message)
+
