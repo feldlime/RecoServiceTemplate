@@ -59,7 +59,7 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    if model_name in val_reco.model_names.keys():
+    if model_name in val_reco.model_names:
         model = val_reco.get_model(model_name)
         reco = model.recommend(user_id)
     else:

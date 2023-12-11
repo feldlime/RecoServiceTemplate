@@ -14,7 +14,8 @@ def download_dataset():
     # download dataset by chunks
     url = 'https://github.com/irsafilo/KION_DATASET/raw/f69775be31fa5779907cf0a92ddedb70037fb5ae/data_original.zip'
 
-    req = requests.get(url, stream=True)
+    timeout = 1000
+    req = requests.get(url, stream=True, timeout=timeout)
 
     with open('kion.zip', 'wb') as fd:
         total_size_in_bytes = int(req.headers.get('Content-Length', 0))
@@ -43,12 +44,14 @@ def read_dataset():
     return interactions, users, items
 
 
+# pylint: disable=too-many-boolean-expressions
 def make_dataset():
     if not os.path.exists("kion.zip"):
         download_dataset()
     if not os.path.exists("service/models/data_original/interactions.csv") or \
         not os.path.exists("service/models/data_original/users.csv") or \
-        not os.path.exists("service/models/data_original/items.csv"):
+        not os.path.exists("service/models/data_original/items.csv"
+                           ):
         cmd = "unzip kion.zip"
         with Popen(cmd, stdout=PIPE, stderr=PIPE, bufsize=1,
                    universal_newlines=True, shell=True) as p:

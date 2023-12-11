@@ -55,4 +55,3 @@ class NotEnoughError(Exception):
         self.reco_len = reco_len
         self.message = message + str(self.reco_len)
         super().__init__(self.message)
-

@@ -18,7 +18,6 @@ class RecommendationValidator:
         }
 
     def get_model(self, model_name: str):
-        if model_name not in self.model_names.keys():
+        if model_name not in self.model_names:
             return None
-        else:
-            return self.model_names[model_name]
+        return self.model_names[model_name]

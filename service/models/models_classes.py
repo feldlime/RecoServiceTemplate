@@ -1,6 +1,5 @@
 import os
 from collections import Counter
-from typing import List
 
 import dill
 import numpy as np
@@ -15,7 +14,8 @@ class RangeTest:
     def __init__(self):
         pass
 
-    def recommend(self, _):
+    @staticmethod
+    def recommend(_):
         reco = list(range(10))
 
         return reco
@@ -26,8 +26,9 @@ class UserKnn:
     """
 
     def __init__(self, model_path: str, nn: int = 50):
-        self.model = dill.load(open(model_path, 'rb'))
-        self.dataset, users, items = make_dataset()
+        with open(model_path, 'rb') as fh:
+            self.model = dill.load(fh)
+        self.dataset, _, _ = make_dataset()
         self.idf, self.idf_dict = self.prepare_idf()
 
         train_ids = np.load("service/models/weights/train_ids.npy",
@@ -54,7 +55,7 @@ class UserKnn:
             if similar >= 1:
                 continue
             for item_id in self.watched_dict[similar_user]:
-                if item_id in watched_items.keys():
+                if item_id in watched_items:
                     continue
                 watched_items[item_id] = None
                 rank_idf = similar * self.idf_dict[item_id]
@@ -79,7 +80,7 @@ class UserKnn:
             user_id = self.users_mapping[user]
             recs = self.model.similar_items(user_id, N=N)
             maps = [self.users_inv_mapping[user] for user in recs[0]], \
-                [sim for sim in recs[1]]
+                list(sim for sim in recs[1])
             maps[0].pop(0)
             maps[1].pop(0)
             return maps
@@ -102,6 +103,7 @@ class UserKnn:
                                      columns=['doc_freq']).reset_index()
         # num of documents = num of recommendation list = dataframe shape
         n = self.dataset.shape[0]
+        # pylint: disable = E1137, E1136
         idf['idf'] = idf['doc_freq'].apply(lambda x:
                                            np.log((1 + n) / (1 + x) + 1))
 
@@ -115,8 +117,10 @@ class Popular:
         super().__init__()
         self.mp_items = 1500
         assert os.path.exists(model_path), "Wrong path"
-        self.pop = dill.load(open(model_path, 'rb'))
-        interactions, users, items = make_dataset()
+        with open(model_path, 'rb') as fh:
+            self.pop = dill.load(fh)
+
+        interactions, _, items = make_dataset()
         self.dataset = self.make_dataset_year_genre(interactions, items)
 
         self.popular_items = list(self.pop.recommend(
@@ -174,7 +178,8 @@ class PopularUserKnn:
         self.popular_model = pop_model
         self.n = n
 
-    def recommend(self, user_id: int) -> List[int]:
+    # pylint: disable=too-many-branches
+    def recommend(self, user_id: int):  # noqa: C901
         try:
             reco_list = self.user_knn_model.recommend(user_id)
         except KeyError:

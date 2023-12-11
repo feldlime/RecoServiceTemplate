@@ -35,6 +35,10 @@ black = "^23.10.1"
 line-length = 120
 target-version = ["py38", "py39", "py310"]
 
+[tool.ruff.lint.pylint]
+max-branches = 12
+max-bool-expr = 5
+
 [build-system]
 requires = ["poetry>=1.0.5"]
 build-backend = "poetry.masonry.api"
