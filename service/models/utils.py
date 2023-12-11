@@ -6,6 +6,7 @@ import pandas as pd
 import requests
 from rectools import Columns
 from tqdm import tqdm
+import zipfile
 
 warnings.filterwarnings("ignore")
 
@@ -52,13 +53,8 @@ def make_dataset():
         not os.path.exists("service/models/data_original/users.csv") or \
         not os.path.exists("service/models/data_original/items.csv"
                            ):
-        cmd = "unzip kion.zip"
-        with Popen(cmd, stdout=PIPE, stderr=PIPE, bufsize=1,
-                   universal_newlines=True, shell=True) as p:
-            for line in p.stdout:
-                print(line, end=" ")
-            for line in p.stderr:
-                print(line, end=" ")
+        with zipfile.ZipFile("kion.zip", 'r') as zip_ref:
+            zip_ref.extractall('service/models')
 
     interactions, users, items = read_dataset()
 
