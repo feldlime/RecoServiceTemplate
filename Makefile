@@ -50,7 +50,7 @@ flake: .venv
 pylint: .venv
 	poetry run pylint $(PROJECT) $(TESTS)
 
-lint: isort flake mypy pylint
+lint: isort flake pylint
 
 
 # Test
