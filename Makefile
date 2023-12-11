@@ -47,7 +47,7 @@ flake: .venv
 	poetry run flake8 $(PROJECT) $(TESTS)
 
 mypy: .venv
-	poetry run mypy $(PROJECT) $(TESTS)
+	poetry run mypy --config-file mypy.ini $(PROJECT) $(TESTS)
 
 pylint: .venv
 	poetry run pylint $(PROJECT) $(TESTS)
