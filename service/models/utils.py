@@ -1,7 +1,6 @@
 import os
 import warnings
 import zipfile
-from subprocess import PIPE, Popen
 
 import pandas as pd
 import requests
