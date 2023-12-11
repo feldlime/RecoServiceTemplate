@@ -5,7 +5,7 @@ from subprocess import PIPE, Popen
 import pandas as pd
 import requests
 from rectools import Columns
-from tqdm.auto import tqdm
+from tqdm import tqdm
 
 warnings.filterwarnings("ignore")
 
