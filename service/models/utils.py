@@ -1,12 +1,12 @@
 import os
 import warnings
+import zipfile
 from subprocess import PIPE, Popen
 
 import pandas as pd
 import requests
 from rectools import Columns
 from tqdm import tqdm
-import zipfile
 
 warnings.filterwarnings("ignore")
 
