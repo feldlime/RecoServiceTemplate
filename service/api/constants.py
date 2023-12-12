@@ -8,4 +8,6 @@ AVAILABLE_MODEL_NAMES = [
     "task3_crop5_tfidf",
     "task3_crop20_cosine",
     "task3_crop20_tfidf",
+    "task5_crop20_MultiVAE",
+    "task5_crop20_RecVAE",
 ]

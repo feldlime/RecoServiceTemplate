@@ -25,7 +25,7 @@ with zipfile.ZipFile("./data_original.zip", "r") as zip_ref:
 recommender = Recommender(
     dataset_path="artifacts/data_original/interactions.csv",
     warm_model_path="artifacts/first_experiment_popular.pkl",
-    hot_model_path="artifacts/task3_cropped20_experiment_tfidf_userknn.pkl",
+    hot_model_path="./ saved/RecVAE-Dec-12-2023_19-19-05.pth",
 )
 
 
