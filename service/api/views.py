@@ -7,6 +7,7 @@ from service.api.exceptions import UserNotFoundError, ModelNotFoundError
 from service.log import app_logger
 import pandas as pd
 from service.api import user_knn
+from service.api import autoencoder
 import pickle
 from service.api.user_knn import load
 import os
@@ -54,20 +55,26 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    if model_name not in ["personal", "anotherModel"]:  # Add your model names
-        raise HTTPException(status_code=404, detail="Model not found")
-    
+    k_recs = request.app.state.k_recs
+
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
+    elif model_name == userknn_model:
+        reco_df = userknn_model.recommendation(user_id,N_recs=k_recs)
+    elif model_name == autoencoder:
+        reco_df = autoencoder.recommend_items(user_id,N_recs=k_recs)
+    elif model_name == autoencoder:
+        reco_df = autoencoder.recommend_items(user_id,N_recs=k_recs)
 
     # Generate recommendations using your UserKnn model
     
-    k_recs = request.app.state.k_recs
+    
     
     #user_knn_model = load_user_knn_model("service/api/user_knn_model.pkl")
     #reco_df = request.app.state.k_recs
     #reco_items = pd.DataFrame({'user_id': [123, 456, 789]}) 
-    reco_df = userknn_model.recommendation(user_id,N_recs=k_recs)
+    
+    
     return RecoResponse(user_id=user_id, items=reco_df)
 
 
