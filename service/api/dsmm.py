@@ -1,35 +1,28 @@
 import numpy as np
-from tqdm import tqdm
 
-class  Recommend_items_to_user(user_id, item_embeddings, topn=10, sample_size=100):
-    # Map user_id to internal user index
-    internal_user_index = user_id_to_uid[user_id]
+class Recommender:
+    def __init__(self, items_ohe_df):
+        self.items_ohe_df = items_ohe_df
 
-    # Introduce randomness in user selection
-    random_user_index = np.random.choice(list(users_ohe_df.index))
+    def recommend_items_to_user(self, user_vec, items_vecs, top_n=10):
+        # Calculate Euclidean distances
+        dists = np.linalg.norm(user_vec - items_vecs, axis=1)
 
-    # Extract user metadata features and interaction vector
-    user_metadata_features = users_ohe_df.drop(["user_id"], axis=1).iloc[random_user_index]
-    user_interaction_vector = interactions_vec[random_user_index]
+        # Get indices of top N items with smallest distances
+        top_indices = np.argsort(dists)[:top_n]
 
-    # Predict user vector using the trained user-to-vector model
-    user_vector = u2v.predict(
-        [np.array(user_metadata_features).reshape(1, -1), np.array(user_interaction_vector).reshape(1, -1)],
-        verbose=False,
-    )
+        # Get corresponding item IDs
+        recommended_item_ids = self.items_ohe_df.iloc[top_indices]['item_id'].tolist()
 
-    # Instead of calculating distance for all items, just select a random subset
-    sampled_item_indices = np.random.choice(item_embeddings.shape[0], size=sample_size, replace=False)
-    sampled_item_embeddings = item_embeddings[sampled_item_indices, :]
+        return recommended_item_ids
 
-    # Calculate distances between the user vector and sampled item embeddings
-    distances = ED(user_vector, sampled_item_embeddings)
+    def recommend(self, external_user_id, model, dataset):
+        # Obtain user vector and items vectors
+        user_vec = self.get_user_vector(external_user_id, model, dataset)
+        items_vecs = self.get_items_vectors()  # You need to implement get_items_vectors
 
-    # Get the indices of the topn items from the sampled set
-    topn_item_indices_sampled = np.argsort(distances, axis=1)[:, :topn]
+        # Make recommendations
+        recommended_items = self.recommend_items_to_user(user_vec, items_vecs)
+        return recommended_items
 
-    # Map internal item indices to item_ids
-    topn_item_ids = [iid_to_item_id[iid] for iid in topn_item_indices_sampled.reshape(-1)]
-
-    return topn_item_ids
 

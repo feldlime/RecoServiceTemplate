@@ -6,8 +6,8 @@ from pydantic import BaseModel
 from service.api.exceptions import UserNotFoundError, ModelNotFoundError
 from service.log import app_logger
 import pandas as pd
-from service.api import user_knn
-from service.api import autoencoder
+from service.api import user_knn,autoencoder,dsmm,recbole
+
 import pickle
 from service.api.user_knn import load
 import os
@@ -63,9 +63,10 @@ async def get_reco(
         reco_df = userknn_model.recommendation(user_id,N_recs=k_recs)
     elif model_name == autoencoder:
         reco_df = autoencoder.recommend_items(user_id,N_recs=k_recs)
-    elif model_name == autoencoder:
-        reco_df = autoencoder.recommend_items(user_id,N_recs=k_recs)
-
+    elif model_name == dsmm:
+        reco_df = dsmm.recommend(user_id,N_recs=k_recs)
+    elif model_name == recbole:
+        reco_df = recbole.recommend_items_to_user(user_id,N_recs=k_recs)
     # Generate recommendations using your UserKnn model
     
     
