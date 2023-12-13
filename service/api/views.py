@@ -10,6 +10,29 @@ from service.api.my_models import als_model, autoencoder_model, lightfm_model, r
 from service.log import app_logger
 
 
+def get_user_knn_recs(user_id):
+    return user_knn_model(user_id)
+
+def get_als_recs(user_id):
+    return als_model(user_id)
+
+def get_lightfm_recs(user_id):
+    return lightfm_model(user_id)
+
+def get_autoencoder_recs(user_id):
+    return autoencoder_model(user_id)
+
+def get_recbole_recs(user_id):
+    return recbole_model(user_id)
+
+model_functions = {
+    "user_knn": get_user_knn_recs,
+    "als": get_als_recs,
+    "lightfm": get_lightfm_recs,
+    "autoencoder_2l_1024_512": get_autoencoder_recs,
+    "RecVAE": get_recbole_recs,
+}
+
 class RecoResponse(BaseModel):
     user_id: int
     items: List[int]
@@ -74,21 +97,12 @@ async def get_reco(
         reco = list(range(k_recs))
     elif model_name == "random":
         reco = list(random.sample(range(1001), k_recs))
-    elif model_name == "user_knn":
-        reco = user_knn_model(user_id)
-    elif model_name == "als":
-        reco = als_model(user_id)
-    elif model_name == "lightfm":
-        reco = lightfm_model(user_id)
-    elif model_name == "autoencoder_2l_1024_512":
-        reco = autoencoder_model(user_id)
-    elif model_name == "RecVAE":
-        reco = recbole_model(user_id)
+    elif model_name in model_functions:
+        return model_functions[model_name](user_id)
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 
     return RecoResponse(user_id=user_id, items=reco)
-
 
 def add_views(app: FastAPI) -> None:
     app.include_router(router)
