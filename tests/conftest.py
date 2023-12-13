@@ -9,7 +9,7 @@ from service.settings import ServiceConfig, get_config
 
 @pytest.fixture
 def service_config() -> ServiceConfig:
-    return get_config()
+    return get_config(is_test=True)
 
 
 @pytest.fixture

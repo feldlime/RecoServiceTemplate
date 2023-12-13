@@ -14,11 +14,12 @@ class LogConfig(Config):
 class ServiceConfig(Config):
     service_name: str = "reco_service"
     k_recs: int = 10
-
+    is_test: bool
     log_config: LogConfig
 
 
-def get_config() -> ServiceConfig:
+def get_config(is_test: bool) -> ServiceConfig:
     return ServiceConfig(
+        is_test=is_test,
         log_config=LogConfig(),
     )

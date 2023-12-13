@@ -4,7 +4,7 @@ import uvicorn
 from service.api.app import create_app
 from service.settings import get_config
 
-config = get_config()
+config = get_config(is_test=False)
 app = create_app(config)
 
 

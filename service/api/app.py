@@ -6,7 +6,7 @@ import uvloop
 from fastapi import FastAPI
 
 from ..log import app_logger, setup_logging
-from ..reco_models import models_dict
+from ..reco_models import get_models
 from ..settings import ServiceConfig
 from .exception_handlers import add_exception_handlers
 from .middlewares import add_middlewares
@@ -37,7 +37,7 @@ def create_app(config: ServiceConfig) -> FastAPI:
     app = FastAPI(debug=False)
     app.state.k_recs = config.k_recs
     app.state.true_token = config.token
-    app.state.models = models_dict
+    app.state.models = get_models(config.is_test)
 
     add_views(app)
     add_middlewares(app)
