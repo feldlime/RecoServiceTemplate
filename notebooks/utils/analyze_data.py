@@ -18,7 +18,8 @@ def count_metrics(
     metrics: dict,
     splitter: Splitter,
     interactions: Interactions,
-    k_recos: int
+    k_recos: int,
+    dataset_params: dict
 ) -> pd.DataFrame:
     results = []
 
@@ -26,7 +27,7 @@ def count_metrics(
 
     for train_ids, test_ids, fold_info in tqdm(fold_iterator, total=splitter.n_splits):
         df_train = interactions.df.iloc[train_ids]
-        train_set = Dataset.construct(df_train)
+        train_set = Dataset.construct(df_train, **dataset_params)
 
         df_test = interactions.df.iloc[test_ids][Columns.UserItem]
         test_users = np.unique(df_test[Columns.User])
