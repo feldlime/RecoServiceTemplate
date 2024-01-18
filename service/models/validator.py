@@ -4,11 +4,12 @@ from service.models.models_classes import LightFMModel, Popular, RangeTest
 class RecommendationValidator:
     def __init__(self):
         self.popular_model = Popular(
-            r'D:\University\Recsys\service\models\weights\popular.dill')
+            'service/models/weights/popular.dill')
 
-        self.lightfm = LightFMModel(r'D:\University\Recsys\service\models\weights\offline_lightfm.pkl',
+        self.lightfm = LightFMModel('service/models/weights/LightFM_warp_48.dill',
                                     self.popular_model)
         self.range_test = RangeTest()
+
 
         self.model_names = {
             "range_test": self.range_test,
