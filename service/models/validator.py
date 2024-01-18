@@ -7,7 +7,7 @@ class RecommendationValidator:
             'service/models/weights/popular.dill')
 
         self.lightfm = LightFMModel(
-            'service/models/weights/LightFM_warp_48.dill',
+            'service/models/weights/offline_lightfm.pkl',
             self.popular_model)
         self.range_test = RangeTest()
 
