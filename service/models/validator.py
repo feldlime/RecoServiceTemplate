@@ -1,20 +1,19 @@
-from service.models.models_classes import Popular, PopularUserKnn, RangeTest, UserKnn
+from service.models.models_classes import LightFMModel, Popular, RangeTest
 
 
 class RecommendationValidator:
     def __init__(self):
         self.popular_model = Popular(
-            'service/models/weights/popular.dill')
-        #
-        self.user_model = UserKnn(
-            r"service/models//weights/userknn.dill")
-        self.popular_knn = PopularUserKnn(self.user_model, self.popular_model)
+            r'D:\University\Recsys\service\models\weights\popular.dill')
+
+        self.lightfm = LightFMModel(r'D:\University\Recsys\service\models\weights\offline_lightfm.pkl',
+                                    self.popular_model)
         self.range_test = RangeTest()
+
         self.model_names = {
             "range_test": self.range_test,
             "popular": self.popular_model,
-            "userknn_base": self.user_model,
-            "popular_knn": self.popular_knn
+            'lightfm': self.lightfm
         }
 
     def get_model(self, model_name: str):

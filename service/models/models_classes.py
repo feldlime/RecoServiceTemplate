@@ -1,4 +1,5 @@
 import os
+import pickle
 from collections import Counter
 
 import dill
@@ -210,3 +211,20 @@ class PopularUserKnn:
             raise NotEnoughError(len(reco_list))
 
         return reco_list
+
+
+class LightFMModel:
+    def __init__(self, offline_lightfm_path, pop_model: Popular, n=10):
+        super().__init__()
+        with open(offline_lightfm_path, 'rb') as f:
+            self.offline_model = pickle.load(f)
+
+        self.popular_model = pop_model
+        self.n = n
+
+    def recommend(self, user_id: int):
+
+        recs = self.offline_model.get(user_id)
+        if recs:
+            return recs
+        return self.popular_model.get_popular_items()[:self.n]

@@ -5,6 +5,7 @@ on:
       - master
       - HW1
       - HW3
+      - HW4
   pull_request:
     types: [opened, synchronize]
 
