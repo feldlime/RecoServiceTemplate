@@ -6,10 +6,10 @@ class RecommendationValidator:
         self.popular_model = Popular(
             'service/models/weights/popular.dill')
 
-        self.lightfm = LightFMModel('service/models/weights/LightFM_warp_48.dill',
-                                    self.popular_model)
+        self.lightfm = LightFMModel(
+            'service/models/weights/LightFM_warp_48.dill',
+            self.popular_model)
         self.range_test = RangeTest()
-
 
         self.model_names = {
             "range_test": self.range_test,
